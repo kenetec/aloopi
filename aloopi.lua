@@ -1602,7 +1602,25 @@ function export.class(superClass)
 end
 
 function export.instanceof(obj, class_type)
+    local hierarchy = rawget(obj, '_hierarchy');
+    local list = {};
+	local str = "";
+	
+	for char in string.gmatch(hierarchy, '.') do
+		if (char ~= '.') then
+			str = str..char;
+        else
+            if str == class_type then
+                return true
+            end
+		end
+	end
+	
+	if str == class_type then
+        return true
+    end
 
+    return false;
 end
 
 return export

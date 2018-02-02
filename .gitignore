@@ -19,6 +19,7 @@ $RECYCLE.BIN/
 
 # performance results
 performance/results/
+dev-tests
 
 # =========================
 # Operating System Files

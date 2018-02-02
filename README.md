@@ -61,9 +61,9 @@ string      typeof(any object)
 + retrieves `__type` from given class or `type(object)`/`typeof(object)`
 
 ```lua
-bool        instanceof(Object object, BaseClass parent)
+bool        instanceof(BaseClass object, string class_type)
 ```
-+ returns `true` if object is an instance of parent
++ returns `true` if object is derived from `class_type`.
 
 ## Type Declarations    
 ```lua
