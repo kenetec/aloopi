@@ -307,5 +307,8 @@ Bo._static_members.public[zF6ZPjQ]=qX(Bo._static_members.public[zF6ZPjQ],nNQG3)e
 not wO9T.__init then
 error('__init is not defined in class \''..QMcSUqdi..'\'')end
 return quNsijN.new(efGM8UMy,{...})end})return AD end;local qboV={}qboV.typeof=zhzpBSx;function qboV.class(KhH)return
-function(H4tXd)return QUh2tc.new(H4tXd,KhH)end end;function qboV.instanceof(Nq6If,II)
-end;return qboV
+function(H4tXd)return QUh2tc.new(H4tXd,KhH)end end
+function qboV.instanceof(Nq6If,II)
+local Y_tefq=rawget(Nq6If,'_hierarchy')local i={}local a3u=""
+for mzhB in string.gmatch(Y_tefq,'.')do if(mzhB~='.')then a3u=a3u..mzhB else if a3u==II then return
+true end end end;if a3u==II then return true end;return false end;return qboV
