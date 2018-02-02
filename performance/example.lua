@@ -1,4 +1,5 @@
 local aloopi = require 'aloopi'
+local time = require 'performance.time'
 local class = aloopi.class;
 local typeof = aloopi.typeof;
 
