@@ -159,7 +159,7 @@ Define a variable or parameter to be optional with `?`.
 ```
 ## Complete Syntax
 ```lua
-statement			=	const_declaration | key_declaration
+statement	    =	const_declaration | key_declaration
 
 const_declaration   =   'const' key_declaration
 
