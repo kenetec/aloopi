@@ -2,16 +2,14 @@ local aloopi = require 'aloopi'
 
 return function(time)
     time('SC with one typed variable', function()
-        aloopi.class(){
-            __type = '';
+        aloopi.class '' (){
             -- public static variable
             ['A: num'] = 1;
         }
     end)
 
     time('SC with two typed variables', function()
-        aloopi.class(){
-            __type = '';
+        aloopi.class '' (){
             -- public static variable
             ['A: num'] = 1;
             -- private static variable
@@ -20,9 +18,7 @@ return function(time)
     end)
 
     time('SC w/ 2 typed vars and 2 single param funcs', function()
-        aloopi.class() {
-            __type = 'static';
-
+        aloopi.class '' () {
             -- public static variable
             ['A: num'] = 1;
             -- private static variable

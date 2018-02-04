@@ -1,8 +1,8 @@
 -- from https://github.com/kikito/middleclass
 local get_time = os.clock or tick;
-local trials = 10000;
 
-return function(file)
+return function(file, trials)
+    trials = trials or 10000;
     return function(title, f)
         collectgarbage()
 

@@ -1,98 +1,25 @@
 --[[
     aloopi by Kendall Hester
     
-    
     Another Lua OOP Implementation
-
-    Uses:
-    + Implementing an API.
-    
-    This module provides:
-    + Fully featured class system.
-        + Inheritance
-        + Public and private members
-        + Static members
-        + Custom meta for objects
-            + except for __index, __newindex, and __metatable
-    + Static typing for members
-        + Supports multidimensional arrays
-            + 'f([,]num)' -> two-dimensional array of infinite numbers
-        + Supports custom class types
-        + Supports dictionaries
-            + 'tab<str, num>' -> dictionary with string keys and number values
-    
-    
-    This module returns:
-        
-        BaseClass   class(BaseClass super_class) -> (table members)
-        string      typeof(any object)
-            - retrieves __type from given class or type(object)/typeof(object)
-        bool        instanceof(Object object, BaseClass parent)
-            - returns true if object is an instance of parent
-
-
-    Member access:
-        + lowercase for instance members
-            + instance members can access instance members(and static by referencing the actual class not self)
-        + Uppercase for static members
-            + static members can only access other static members
-        + 'const' for constants
-        + '_' prefix for private members
-        + '__' prefix for meta.
-
-        OR
-        [possibility]
-        - all members are public instance members by default
-        - '-' for private members
-        - 'stat' for static members
-        - 'inst' for instance members
-        - 'const' for constant members
-        - optional '+' for public members
-    
-    Type declarations:
-    
-    + ['FAVORITE_NUM'] = 5
-        + constants cannot be statically typed b/c they cannot change to begin with
-        + you can define functions as const
-            + 'const f(num)'
-
-    + ['name: str'] = ''
-        + 'name' is the name of the variable
-        + ':' operator to set type
-        + 'str' is shorthand for the datatype 'string'
-
-    + ['f(str, num)'] = function(name, age)
-        + 'f' is the name of the function
-        + parenthesis are required to identify type declaration for function
-        + 'str' is a datatype
-        + 'num' is a datatype
-    
-    + You can leave a parameter undefined by adding a comma: 
-        + 'f(str,,num) = function(name, any, age)'
-            + this is shorthand for 'f(str, any, num)'
-    + Define an array
-        + 'f([]str)' -> array of infinite string
-        + 'f([5]num)' -> array of five numbers
-        + 'f([,]num)' -> two-dimensional array of infinite numbers
-        + 'f(tab<num>)' -> one-dimensional array of infinite numbers
-    + Define dictionaries
-        + 'tab<str, num>' -> keys: string, values: numbers
-    + Define variable arguments
-        + 'f(str...)' -> variable arguments of type string
-        + 'f(num, []bool...)' -> number, infinite arrays of infinite bools
 --]]
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
--- TODO: Implement dictionaries:  'table<str, str>' | alt declaration for arrays, 'table<num>'
-    -- DONE
--- BUG: Shared self-pointer, needs to be individualized.
-    -- SOLVED: deep copy instance_members to make a completely independent copy
--- TODO: static members' self pointer (access to public & private static members)
-    -- DONE
--- TODO: Implement varargs: 'str...' | '[]num...' | '...'
-    -- DONE
--- TODO: Add '?' operator: 'str?' = string or nil
-    -- DONE
+-- POSSIBLE OPTIMIZATIONS: 
+    -- make new objects directly, don't call a function.
+-- TODO: Allow for specific classes for optional optimization.
+    -- 'aloopi.instance_class() {}'
+    -- 'aloopi.static_class() {}'
+    -- 'aloopi.abstract_class() {}'
+-- TODO: Only lowercase named functions are instance members, everything else is static.
+-- TODO: Optimize container system
+    -- Removed classes
+-- TODO: Optimize lexer
+    -- Removed alot of functions
+-- TODO: Optimize parser
+    -- Made objects directly, removed Container class
+-- TODO: Optimize checkers
 -- TODO: Make an proper error system.
+
 -- TODO: function overloading?
 -- TODO: Add optional 'public', 'private', and 'static' modifiers?
 -- TODO: Implement interfaces?
@@ -133,18 +60,6 @@ local function deep_copy_t(arg)
     end
 
     return recurse(arg);
-end
-
---[[
-    table   copy_into(table into, table from)
-    - Shallow copies [from] to [into]
---]]
-local function copy_into(into, from) 
-    local T = into or {}; 
-    for i, v in next, from do 
-        T[i] = v; 
-    end 
-    return T; 
 end
 
 --[[
@@ -196,13 +111,13 @@ local function new_ekv_table(t)
 end
 
 --[[
-    table   slice_t(table t, number slice_start, number slice_end)
+    table   slice_t(table t, number slice_start, number slice_stop)
     - Returns a sliced copy of [t].
 --]]
-local function slice_t(t, slice_start, slice_end)
+local function slice_t(t, slice_start, slice_stop)
     local T = {}
     local Ti = 1;
-    for i = slice_start, slice_end do
+    for i = slice_start, slice_stop do
         T[Ti] = t[i]
         Ti = Ti + 1;
     end
@@ -234,19 +149,6 @@ local function is_alpha_numerical(v)
     end
     return false
 end
-
---[[
-    bool   is_whitespace(string s)
-    - Returns true if [s] matches '^[ \t\n]$'
---]]
-local function is_whitespace(v)
-    if v then
-        if v:match('^[ \t\n]$') then
-            return true
-        end
-    end
-    return false
-end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -268,19 +170,30 @@ local primitive_dts = new_ekv_table {
     'any'
 }
 
+-- used to identify classes
+local BaseClass = {}
+
+local function is_a_class(o)
+    local type = typeof and typeof or type;
+    local t = type(o)
+
+    if t == 'table' then
+        -- check if is a class
+        if rawget(o, '__baseclass') == BaseClass then
+            return true
+        end
+    end
+end
+
 local function _typeof(o)
     -- see if typeof is already defined(ROBLOX)
     local type = typeof and typeof or type;
     local t = type(o)
 
     if t == 'table' then
-        local success, meta = pcall(function() return getmetatable(o) end)
-        if success then
-            if type(meta) == 'table' then
-                if meta.__type then
-                    return meta.__type
-                end
-            end
+        -- check if is a class
+        if rawget(o, '__baseclass') == BaseClass then
+            return rawget(o, '__name')
         end
     end
 
@@ -295,25 +208,103 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Container
 --     - a container that describes any modifiers apply to the value via key
+-- base container {
+--     ct: string
+--         type of container
+--             types
+--                 fn
+--                 var
+--                 array
+--                 datatype
+--                 dictionary
+    
+--     dt: string
+--         datatype of value
+-- }
+
+-- [optionals]
+--     optional: bool
+--         if can be nil or not
+    
+--     const: bool
+--         if cannot be re-set
+    
+--     vargs: bool
+--         if has '...' suffix
+
+-- [types of container]
+    -- root_container
+        -- val: any
+        --     value
+
+        -- raw_key: string
+        --     unparsed key
+
+    -- var
+        -- ct = 'var'
+    
+    -- fn
+        -- ct = 'fn'
+        -- dt = 'function'
+
+        -- params: table<Containers>
+        --     array of other containers without a value
+    
+    -- datatype
+        -- ct = 'datatype';
+        -- dt = '';
+
+        -- optional: bool
+        --      if value can be nil or not   
+        
+    -- array(datatype)
+        -- ct = 'array'
+        -- dt = 'table'
+
+        -- val_dt: string
+        --     datatype of array values
+
+        -- val_optional: bool
+        --     if values can be nil or not
+
+        -- dimensions: table<num, size_of_dimension>
+        --     table of dimensions with sizes.
+
+    -- dictionary(datatype)
+        -- ct = 'dictionary'
+        -- dt = 'table',
+
+        -- key_dt: string
+        --     keys' datatype
+
+        -- key_optional: bool
+        --     if keys can be nil or not
+
+        -- val_dt: string
+        --     values' datatype
+
+        -- val_optional: bool
+        --     if values can be nil or not
+    
 
 
 -- example:
 --     '__init(str, num, [,5]num)'
 --         __init = {
---             type = 'fn',
+--             ct = 'fn',
 --             val = f,
 
 --             params = {           <-- Containers
 --                 {
---                     type = 'datatype'
+--                     ct = 'datatype'
 --                     dt = 'string'
 --                 },
 --                 {
---                     type = 'datatype'
+--                     ct = 'datatype'
 --                     dt = 'number'
 --                 },
 --                 {
---                     type = 'array'
+--                     ct = 'array'
 --                     dt = 'number'
 --                     dimensions = {
 --                         [1] = -1 -- -1 is infinite
@@ -321,107 +312,7 @@ end
 --                     }
 --                 }
 --         }
-local Container = {
-    mt = {__type = 'Container'};
-    base = {
-            -- types
-            --     fn
-            --     var
-            --     array
-            --     datatype
-            --     dictionary
-        type = '';
-        dt = 'any';
-        -- value itself
-        val = nil;
-        -- unparsed string
-        raw_key = '';
-    };
-}
-
-function Container.new()
-    return setmetatable(Container.base, Container.mt)
-end
-
-function Container.copy(base)
-    local copy = copy_t(base);
-    return setmetatable(copy, Container.mt);
-end
-
--- BASE CONTAINERS
-function Container.fn(base)
-    return setmetatable(merge({
-        type = 'fn';
-        dt = 'function';
-        params = {};
-    }, base and base or Container.base), 
-    Container.mt);
-end
-
-function Container.var(base)
-    return setmetatable(merge({
-        type = 'var';
-    }, base and base or Container.base), 
-    Container.mt);
-end
-
-function Container.datatype(base)
-    return setmetatable(merge({
-        type = 'datatype';
-    }, base and base or Container.base), 
-    Container.mt);
-end
-
-function Container.array(base)
-    return setmetatable(merge({
-        type = 'array',
-        dt = 'table';
-        val_dt = '';
-        val_optional = false;
-        dimensions = {
-            -- [1] = (size)
-        }
-    }, base and base or Container.base), 
-    Container.mt);
-end
-
-function Container.dictionary(base)
-    return setmetatable(merge({
-        type = 'dictionary',
-        dt = 'table',
-
-        key_dt = '';
-        key_optional = false;
-        val_dt = '';
-        val_optional = false;
-    }, base and base or Container.base), 
-    Container.mt);
-end
-
--- Modifiers (ones that don't change the type)
-function Container.vargs(base)
-    return setmetatable(merge({
-        vargs = true,
-    }, base and base or Container.base), 
-    Container.mt);
-end
-
-
-function Container.const(base)
-    return setmetatable(merge({
-        const = true;
-    }, base and base or Container.base), 
-    Container.mt);
-end
-
-function Container.optional(base)
-    return setmetatable(merge({
-        optional = true;
-    }, base and base or Container.base), 
-    Container.mt);
-end
-
-local function check_array(container, arg)
+local function check_array(container, arg, raw_key)
     if _typeof(arg) == 'table' then
         -- verify number of dimensions
         local num_of_dims = n_of_items_in(container.dimensions)
@@ -468,12 +359,12 @@ local function check_array(container, arg)
 
         recurse(arg, 1);
     else
-        error('Got: \'' .. _typeof(arg) .. '\' instead of an array of \'' .. container.dt .. '\' in \'' .. container.raw_key .. '\'')
+        error('Got: \'' .. _typeof(arg) .. '\' instead of an array of \'' .. container.dt .. '\' in \'' .. raw_key .. '\'')
     end
 end
 
-local function check_dictionary(container, arg)
-    local ct = container.type;
+local function check_dictionary(container, arg, raw_key)
+    local ct = container.ct;
 
     local kdt = container.key_dt;
     local k_optional = container.key_optional;
@@ -488,7 +379,7 @@ local function check_dictionary(container, arg)
                     -- pass
                 else
                     -- key error
-                    error('Keys\' datatype is \'' .. _typeof(k) .. '\', not datatype \'' .. kdt .. '\' in \'' .. container.raw_key ..'\'')
+                    error('Keys\' datatype is \'' .. _typeof(k) .. '\', not datatype \'' .. kdt .. '\' in \'' .. raw_key ..'\'')
                 end
             end
 
@@ -497,7 +388,7 @@ local function check_dictionary(container, arg)
                     -- pass
                 else
                     -- value error
-                    error('Values\' datatype is \'' .. _typeof(k) .. '\', not datatype \'' .. kdt .. '\' in \'' .. container.raw_key ..'\'')
+                    error('Values\' datatype is \'' .. _typeof(k) .. '\', not datatype \'' .. kdt .. '\' in \'' .. raw_key ..'\'')
                 end
             end
         end
@@ -506,34 +397,34 @@ local function check_dictionary(container, arg)
     end
 end
 
-local function check_type(container, arg)
-    local ct = container.type;
+local function check_type(container, arg, raw_key)
+    local ct = container.ct;
     local dt = container.dt;
     local at = _typeof(arg);
 
     if at == dt then
         if ct == 'array' then
-            check_array(container, arg)
+            check_array(container, arg, raw_key)
         elseif ct == 'dictionary' then
-            check_dictionary(container, arg)
+            check_dictionary(container, arg, raw_key)
         end
     elseif at == 'nil' and container.optional then
         -- pass
     elseif dt == 'any' then
         -- pass
     else
-        error('Got: \'' .. at .. '\' instead of \'' .. dt .. '\' in \'' .. container.raw_key .. '\'')
+        error('Got: \'' .. at .. '\' instead of \'' .. dt .. '\' in \'' .. raw_key .. '\'')
     end
 end
 
-local function check_vargs(container, args)
+local function check_vargs(container, args, raw_key)
     for arg_i, arg in next, args do
-        check_type(container, arg)
+        check_type(container, arg, raw_key)
     end
 end
 
-local function get_container_value(ignore_self, container, on_fn_clear)
-    if _typeof(container.val) == 'function' then
+local function get_value(ignore_self, container, on_fn_clear)
+    if container.ct == 'fn' then
         -- wrap function to check for args datatypes
         return function(...)
             -- check if called with ':'
@@ -545,14 +436,14 @@ local function get_container_value(ignore_self, container, on_fn_clear)
                     if args[1] == ignore_self then args = slice_t(args, 2, #args) end
                 end
 
-                if container.type == 'fn' then
+                if container.params then
                     -- check arg types
                     for i, param in next, container.params do
                         if param.vargs == true then
-                            check_vargs(param, slice_t(args, i, #args))
+                            check_vargs(param, slice_t(args, i, #args), container.raw_key)
                             break;
                         else
-                            check_type(param, args[i])  
+                            check_type(param, args[i], container.raw_key)  
                         end      
                     end
                 end
@@ -564,25 +455,20 @@ local function get_container_value(ignore_self, container, on_fn_clear)
     return container.val
 end
 
-local function set_container_value(container, val)
-    local new_container = Container.copy(container);
-    if container.const then
-        error('Cannot change value of a constant!')
-    else
-        -- check type
-        check_type(container, val)
+local function set_value(container, val)
+    if not container.const then
+        if container.ct ~= '' then
+            -- check type
+            check_type(container, val)
+        end
+
         -- set value
-        new_container.val = val;
+        container.val = val;
+    else
+        error('Cannot change value of a constant!')
     end
 
-    return new_container
-end
-
-local function get_raw_val(o)
-    if _typeof(o) == 'Container' then
-        return o.val;
-    end
-    return o;
+    return container
 end
 
 local function determine_access(key)
@@ -594,16 +480,25 @@ local function determine_access(key)
     end
 end
 
+local function parseable_key(k)
+    return 
+    k:find(':') or 
+    k:find('%(') or 
+    k:sub(1, 6) == 'const '
+end
+
 
 -- token_types:
 --     'ID'
 --     'NUMBER'
+--      those symbols
 
 -- tokens that are keywords or special characters will have the same type as their name
 local parse_key;
 local parse_keys;
 do
     -- LEXER --
+    -- Needs to be optimized
 
     -- accept these symbols
     local symbols = new_ekv_table {
@@ -621,120 +516,109 @@ do
 
     local keywords = new_ekv_table {
         'const',
-        --'public',
-        --'private',
         --'static'
     }
 
-    local Token = {}
-    function Token.new(type, lexme, literal)
-        return setmetatable({
-            type = type;
-            lexme = lexme;
-            literal = literal;
-        }, {
-            __tostring = function(self)
-                return self.type .. '\t' .. self.lexme .. '\t' .. tostring(literal)
-            end
-        })
-    end
+    -- Token = {
+    --     type: string
+    --         Token type
+    --     lexme: string 
+    --         actual string
+    -- };
 
-
-
-    local tokenize_key;
-    do
-        local pos = 0
-        local chars = {}
+    local function tokenize_key(key)
+        local pos = 1
         local tokens = {}
 
-        local function next_char()
-            if pos+1 <= #chars then
-                pos = pos+1
-                return chars[pos]
-            end
-        end
+        -- tokenizer loop
+        local char = key:sub(pos, pos)
+        while pos <= key:len() do
+            if not symbols[char] then
+                -- search for keyword
 
-        local function peek()
-            if pos+1 <= #chars then
-                return chars[pos+1]
-            end
-        end
+                -- is_alpha
+                if is_alpha(char) then
+                    local lexme = char;
+                    local peeked = key:sub(pos+1, pos+1)
+                    -- identifier or keyword
+                    if peeked then
+                        if is_alpha_numerical(peeked) then
+                            -- get complete word until it's no longer alpha_numerical
+                            pos = pos + 1;
+                            char = key:sub(pos, pos)
 
-        local function create_token(type, lexme, lit)
-            tokens[#tokens+1] = Token.new(type, lexme, lit)
-        end
+                            while is_alpha_numerical(char) do
+                                lexme = lexme .. char
 
-        tokenize_key = function(key)
-            pos = 0
-            chars = {}
-            tokens = {}
-
-            for c in key:gmatch('.') do
-                chars[#chars+1] = c;
-            end
-
-            local char = next_char()
-            -- tokenizer loop
-            while char ~= nil do
-                if not symbols[char] then
-                    -- search for keyword
-                    if is_alpha(char) then
-                        local lexme = char;
-                        -- identifier or keyword
-                        if peek() then
-                            if is_alpha_numerical(peek()) then
-                                -- get complete word until it's no longer alpha_numerical
-                                char = next_char()
-                                while is_alpha_numerical(char) do
-                                    lexme = lexme .. char
-                                    char = next_char()
-                                end
-                            else
-                                char = next_char()
-                            end                     
-                        end
-
-                        -- now check lexme against keywords table
-                        if keywords[lexme] then
-                            -- create keyword token
-                            create_token(lexme, lexme)
-                        else
-                            -- create identifier token
-                            create_token('ID', lexme)
-                        end
-                    elseif tonumber(char) then
-                        -- make number token
-                        local lexme = char;
-                        if peek() then
-                            if tonumber(peek()) then
-                                char = next_char()
-
-                                while tonumber(char) do
-                                    lexme = lexme .. char;
-                                    char = next_char()
-                                end
-                            else
-                                char = next_char()
+                                pos = pos + 1;
+                                char = key:sub(pos, pos)
                             end
-                        end
-                        create_token('NUMBER', lexme, tonumber(lexme))
-                    elseif is_whitespace(char) then
-                        char = next_char()
+                        else
+                            pos = pos + 1;
+                            char = key:sub(pos, pos)
+                        end                     
                     end
-                elseif symbols[char] then
-                    -- Create token
-                    create_token(char, char)
-                    char = next_char()
-                else
-                    error('Unknown character \'' .. char .. '\'.')
+
+                    -- now check lexme against keywords table
+                    if keywords[lexme] then
+                        -- create keyword token
+                        tokens[#tokens+1] = {
+                            type = lexme,
+                            lexme = lexme
+                        }
+                    else
+                        -- create identifier token
+                        tokens[#tokens+1] = {
+                            type = 'ID',
+                            lexme = lexme
+                        }
+                    end
+                elseif tonumber(char) then
+                    -- make number token
+                    local lexme = char;
+                    local peeked = key:sub(pos+1, pos+1)
+
+                    if peeked then
+                        if tonumber(peeked) then
+                            pos = pos + 1;
+                            char = key:sub(pos, pos)
+
+                            while tonumber(char) do
+                                lexme = lexme .. char;
+
+                                pos = pos + 1;
+                                char = key:sub(pos, pos)
+                            end
+                        else
+                            pos = pos + 1;
+                            char = key:sub(pos, pos)
+                        end
+                    end
+                    -- create number token
+                    tokens[#tokens+1] = {
+                        type = 'NUMBER',
+                        lexme = lexme
+                    }
+                elseif char:match('^[ \t\n]$') then
+                    -- if whitespace, skip
+                    pos = pos + 1;
+                    char = key:sub(pos, pos)
                 end
+            elseif symbols[char] then
+                -- Create token
+                tokens[#tokens+1] = {
+                    type = char,
+                    lexme = char
+                }
+
+                pos = pos + 1;
+                char = key:sub(pos, pos)
+            else
+                error('Unknown character \'' .. char .. '\'.')
             end
-
-            --for i, v in next, tokens do print(i,v) end
-        -- print()
-
-            return tokens;
         end
+
+        return tokens;
     end
 
 
@@ -764,13 +648,6 @@ do
         local new_key = ''
         local root_container;
 
-        local function next_token()
-            if pos+1 <= #tokens then
-                pos = pos+1
-                return tokens[pos]
-            end
-        end
-
         local function found(token_type)
             if token then
                 if token.type == token_type then
@@ -782,7 +659,12 @@ do
         local function consume(token_type)
             if token.type == token_type then
                 local t = token
-                token = next_token()
+
+                if pos+1 <= #tokens then
+                    pos = pos+1
+                    token = tokens[pos]
+                end
+
                 return t
             else
                 error('Got \'' .. token.type .. '\' instead of \'' .. token_type .. '\' in \'' .. raw_key .. '\'')
@@ -791,12 +673,7 @@ do
 
         
         local function resolve_dt(dt)
-            if primitive_dts[dt] or shorthand_dts[dt] then
-                -- datatype name
-                return primitive_dts[dt] or shorthand_dts[dt]
-            end
-            -- assume class name
-            return dt
+            return primitive_dts[dt] or shorthand_dts[dt] or dt
         end
 
             -- statement           = const_declaration   |
@@ -824,27 +701,11 @@ do
             -- * expressions return a container
         local type_expression;
 
-        -- datatype    =   ID ['?']
-
-        local function datatype(container)
-            container = Container.datatype(container);
-
-            local dt = resolve_dt(consume 'ID'.lexme);
-            container.dt = dt;
- 
-            if found '?' then
-                consume '?'
-                container = Container.optional(container)
-            end
-
-            return container;
-        end
-
         -- array_expression    =   '[' [NUMBER ',']... ']' type_expression
         local function array_expression(container)
             -- apply array modifier
-            container = Container.array(container)
-            container.raw_key = raw_key;
+            container.ct = 'array';
+            container.dimensions = {};
 
             consume '['
 
@@ -877,34 +738,30 @@ do
 
         -- table_expression    =   'table<' type_expression [',' type_expression] '>'
         local function table_expression(container)
-            -- 'table' in type_expression
+            -- 'table'
             container.dt = resolve_dt(consume 'ID'.lexme);
             
             if found '<' then
                 consume '<'
                 -- get type name
-                local dt = Container.datatype()
-                dt.raw_key = raw_key;
-                dt = type_expression(dt);
+                local first_type_name = type_expression();
 
                 -- check if there's another typename
                 if found ',' then
                     -- is a dictionary
                     consume ','
-                    container = Container.dictionary(container)
-                    container.key_dt = dt.dt;
-                    container.key_optional = dt.optional;
+                    container.ct = 'dictionary';
+                    container.key_dt = first_type_name.dt;
+                    container.key_optional = first_type_name.optional;
 
-                    local val_dt = Container.datatype()
-                    val_dt.raw_key = raw_key;
-                    val_dt = type_expression(val_dt);
+                    local val_dt = type_expression();
 
                     container.val_dt = val_dt.dt;
                     container.val_optional = val_dt.optional;
                 else
                     -- is an 1D array
-                    container = Container.array(container)
-                    container.dt = dt.dt;
+                    container.ct = 'array';
+                    container.val_dt = first_type_name.dt;
                     container.dimensions[1] = -1;
                 end
 
@@ -914,7 +771,7 @@ do
             if found '?' then
                 -- datatype()
                 consume '?'
-                container = Container.optional(container);
+                container.optional = true;
             end
 
             return container
@@ -924,12 +781,17 @@ do
         --                         table_expression    |
         --                         datatype
         type_expression = function(container)
+            container = container or {
+                ct = 'datatype';
+                dt = 'any';
+            };
+
             if found '[' then
                 -- array --
                 container = array_expression(container)
 
                 -- get array datatype
-                local val_dt = type_expression(container)
+                local val_dt = type_expression()
                 container.val_dt = val_dt.dt;
                 container.val_optional = val_dt.optional;
             elseif found 'ID' then
@@ -939,10 +801,16 @@ do
                     container = table_expression(container);
                 else
                     -- resolve datatype
-                    container = datatype(container)
+                    local dt = resolve_dt(consume 'ID'.lexme);
+                    container.dt = dt;
+        
+                    if found '?' then
+                        consume '?'
+                        container.optional = true;
+                    end
                 end
             else
-                error('Expected a type_expression in \'' .. container.raw_key .. '\'')
+                error('Expected a type_expression in \'' .. raw_key .. '\'')
             end
             return container
         end
@@ -954,7 +822,7 @@ do
             root_container = type_expression(root_container);
 
             -- apply var modifier
-            root_container = Container.var(root_container)
+            root_container.ct = 'var'
         end
 
         -- fn_type_expression  =   type_expression ['...']
@@ -967,7 +835,7 @@ do
                 consume '.'
 
                 -- apply modifier
-                container = Container.vargs(container)
+                container.vargs = true;
             end
 
             return container;
@@ -976,26 +844,21 @@ do
         -- fn_declaration      =   ID '(' fn_type_expression... ')'
         local function fn_declaration()
             consume '('
-
             -- apply fn modifier
-            root_container = Container.fn(root_container)
+            root_container.ct = 'fn';
+            root_container.dt = 'function';
+            root_container.params = {};
 
             while not found ')' do
                 if found 'ID' or found '[' then
                     -- param
-                    local datatype = Container.datatype();
-                    datatype.raw_key = raw_key;
+                    local container = fn_type_expression();
 
-                    local container = fn_type_expression(datatype);
                     root_container.params[#root_container.params+1] = container;
 
                     -- if there are variable arguments, there can be no more parameters.
                     if container.vargs then
-                        if found ')' then
-                            break;
-                        else
-                            error('Cannot have additional parameters after a variable argument declaration in \'' .. raw_key .. '\'')
-                        end
+                        break;
                     end
 
                     if found ',' then
@@ -1006,27 +869,27 @@ do
                 elseif found ',' then
                     -- for 'any' shorthand
                     consume ','
-                    -- create a container for an undefined param
-                    local container = Container.datatype()
-                    container.raw_key = raw_key;
-                    -- define as any
-                    container.dt = 'any';
 
-                    root_container.params[#root_container.params+1] = container
+                    -- add 'any' datatype container
+                    root_container.params[#root_container.params+1] = {
+                        ct = 'datatype';
+                        dt = 'any';
+                    };
                 elseif found '.' then
                     -- any argument varg
-                    local container = Container.datatype();
-                    container.raw_key = raw_key;
 
                     -- eat '...'
                     consume '.'
                     consume '.'
                     consume '.'
 
-                    -- apply modifier
-                    container = Container.vargs(container)
+                    -- add container
+                    root_container.params[#root_container.params+1] = {
+                        ct = 'datatype';
+                        dt = 'any';
+                        vargs = true;
+                    }
 
-                    root_container.params[#root_container.params+1] = container
                     break;
                 else
                     -- error b/c then there should be a ')'
@@ -1057,8 +920,8 @@ do
             
             key_declaration();
 
-            -- apply modifiers
-            root_container = Container.const(root_container)
+            -- apply modifier
+            root_container.const = true;
         end
 
         -- statement           = const_declaration   |
@@ -1072,33 +935,37 @@ do
         end
 
         parse_key = function(key, val)
-            if  key:find(':') or 
-                key:find('%(') or 
-                key:sub(1, 6) == 'const ' then
-                pos = 0
+            if parseable_key(key) then
+                pos = 1
                 raw_key = key
                 new_key = key
 
-                root_container = Container.new();
-                root_container.raw_key = raw_key;
-                root_container.key = key;
+                root_container = {
+                    -- container type
+                    ct = '';
+                    -- datatype
+                    dt = '';
+                    -- unparsed key
+                    raw_key = raw_key;
+                    -- value
+                    val = val;
+                };
 
                 tokens = tokenize_key(key)
-                --ntokens = n_of_items_in(tokens)
-                token = next_token()
-                if token then
-                    -- start statement
-                    statement()
-                end
+                token = tokens[pos]
 
-                -- check type
-                check_type(root_container, val)
-                -- set value
-                root_container.val = val;
+                -- start statement
+                statement()
+
+                -- when we finish parsing, check type
+                if not root_container.const then
+                    check_type(root_container, val)
+                end
 
                 return new_key, root_container
             else
-                return key, val
+                local t = _typeof(val)
+                return key, {ct = t == 'function' and 'fn' or '', dt = t, raw_key = key, val = val}
             end
         end
     end
@@ -1111,6 +978,8 @@ do
     parse_keys = function(members)
         local new_members = {}
         for key, val in next, members do
+            -- only parse if we find this
+            local new_key, new_val;
             new_key, new_val = parse_key(key, val)
             new_members[new_key] = new_val;
         end
@@ -1164,6 +1033,27 @@ do
         return instance_members, static_members, meta
     end
 end
+
+-- -- sort_members
+-- local function sort_members(members)
+--     -- sorts members into public and private categories
+--     local new_members = {
+--         public = {};
+--         private = {};
+--     };
+
+--     local meta = {};
+
+--     for name, value in next, members do
+--         if name:sub(1, 2) == '__' then
+--             meta[name] = value;
+--         else
+--             new_members[determine_access(name)][name] = value;
+--         end
+--     end
+
+--     return new_members, meta;
+-- end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1171,7 +1061,133 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
+local function merge_members(members)
+    return merge(members.public, members.private)
+end
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- This section of the script is for constructing a pointer
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+local function create_static_pointer(class, super_class)
+    local static_members = class.__static_members;
+    local function get_member(key)
+        if _typeof(static_members.public[key]) ~= 'nil' then
+            return static_members.public[key]
+        elseif _typeof(static_members.private[key]) ~= 'nil' then
+            return static_members.private[key]
+        end
+    end
 
+    local function on_pointer_index(pointer, key)
+        if key == 'super' then
+            if super_class then
+                local obj = super_class.__get_static_member(key)
+                if obj ~= nil then
+                    return get_value(pointer, obj, function(container, args)
+                        return container.val(pointer, unpack(args))
+                    end)
+                end
+
+                return obj
+            else
+                error('Class \'' .. class_type .. '\' does not have a super class!');
+            end
+        else
+            local obj = get_member(key)
+
+            if obj ~= nil then
+                return get_value(pointer, obj, function(container, args)
+                    -- all args checked out, call function
+                    return container.val(pointer, unpack(args))
+                end)
+            end
+            return obj
+        end
+    end
+
+    -- everything set on pointer is an instance member
+    local function on_pointer_newindex(pointer, key, val)
+        local container = get_member(key)
+        if container ~= nil then
+            -- parse key
+            local new_key, root_container
+            new_key, root_container = parse_key(key, val)
+            -- determine access
+            static_members[determine_access(new_key)][new_key] = root_container;
+        end
+    end
+    
+    return setmetatable({}, {
+        __index = on_pointer_index;
+        __newindex = on_pointer_newindex;
+    })
+end
+
+-- create_instance_pointer
+local function create_instance_pointer(class, super_class, on_index_rules)
+    -- on_index_rules: tab<str, fn(pointer, key, self_members)>
+    -- self_members is a copy of __prototype
+    -- and holds all independent data for pointer
+
+    -- the pointer will index in the following order:
+    --     self_members
+    --     __prototype
+    --     super...
+
+    -- copy values from class.__prototype
+    local self_members = merge_members(deep_copy_t(class.__prototype))
+
+    -- must deep_copy_t to remove any value references to the prototype
+    -- local self_members = merge(
+    --     merge_members(deep_copy_t(class.__prototype)), merge_members(class.__static_members))
+
+    return setmetatable({
+        __first_super = super_class;
+        __next_super = super_class;
+    }, {
+        __index = function(pointer, key)
+            -- test for on_index rules first
+            if on_index_rules[key] then return on_index_rules[key](pointer, key, self_members) end;
+            
+            local container = self_members[key]
+            if container == nil then
+                if class.__prototype[key] then
+                    -- check __prototype
+                    container = class.__prototype[key]
+                else
+                    -- check super
+                    container = pointer.__first_super.__get_instance_member(key)
+                end
+            end
+
+            if container ~= nil then
+                return get_value(pointer, container, function(container, args)
+                    -- all args checked out, call function
+                    return container.val(pointer, unpack(args))
+                end)
+            end
+        end;
+
+        -- on new index, everything should be set to self_member
+        __newindex = function(pointer, key, val)
+            local previous = self_members[key]
+
+            if previous == nil then
+                -- parse key
+                new_key, new_val = parse_key(key, val);
+
+                -- set to self members
+                self_members[new_key] = new_val;
+            else
+                -- set to self members
+                self_members[key] = set_value(previous, val);
+            end
+        end;
+    }), self_members;
+end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1179,10 +1195,6 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
-local function merge_members(members)
-    return merge(members.public, members.private)
-end
-
 --[[
     Objects are created by calling [class]([class arguments]).
 
@@ -1190,189 +1202,103 @@ end
     - When an object is created, the super class is not instantiated until __init(self) calls
     self.super() for the first time.
         + Then self.super will refer to the super's instance.
-
-
 --]]
-local Object = {};
+function create_instance(class, init_args, child_pointer)
+    local super_class = class.__super;
+    local meta = class.__meta;
 
-function Object.new(class, init_args, child_pointer)
-    -- shared variables
-    local class_hierarchy = rawget(class, '_hierarchy')
-    local class_type = rawget(class, '_type')
-    local meta = rawget(class, '_meta')
-    local instance_members = rawget(class, '_instance_members')
-
-    local super_class = rawget(class, '_super');
-
-    -- members is a reference table of methods and variables from class and super classes.
-    local members = merge_members(instance_members);
+    -- members is a reference table of methods and variables from class.
+    local members = class.__members;
 
     -- self_pointer is the interface between the user and the object.
     local self_pointer;
-    -- self_members holds all independent data for self.
-    local self_members = {};
+    local self_members;
 
+    -- if super class has been intialized yet
     local super_initialized = false;
 
-    -- idea:
-    -- the self_pointer is passed around administers alterations are made to self_members.
-    -- this way, we don't have to whole new objects for super classes, just pass the child's
-    -- self pointer through it
-    -- this saves a ton of memory :)
-
-    if child_pointer then
-        -- merge child_pointer._members with our members
-        rawset(child_pointer, '_members', merge(rawget(child_pointer, '_members'), members));
-
-        -- set next super class
-        rawset(child_pointer, '_next_super', super_class);
-
-        -- call init
-        if _typeof(meta.__init) == 'Container' then
-            get_container_value(nil, meta.__init, function(container, args)
-                container.val(child_pointer, unpack(args))
-            end)(unpack(init_args))
-        else
-            meta.__init(child_pointer, unpack(init_args))
-        end
-
-        super_initialized = true;
-
-        return;
-    end
-
-    -- Otherwise... --
-    local function get_member(key)
-        if _typeof(members[key]) ~= 'nil' then
-            return members[key]
-        elseif _typeof(self_members[key]) ~= 'nil' then
-            return self_members[key]
-        end
-    end
- 
-    -- Create a self pointer for instance members
-    local function on_pointer_index(pointer, key)
-        if key ~= 'super' then
-            local obj = get_member(key)
-            local obj_t = _typeof(obj)
-
-            if obj_t == 'Container' then
-                return get_container_value(pointer, obj, function(container, args)
-                    -- all args checked out, call function
-                    return container.val(pointer, unpack(args))
-                end)
-            elseif obj_t == 'function' then
+    self_pointer, self_members = create_instance_pointer(class, super_class, {
+        ['super'] = function(pointer, key, self_members)
+            if not super_initialized then
                 return function(...)
-                    local args = {...}
-                    if args[1] == pointer then args = slice_t(args, 2, #args) end
-            
-                    return obj(pointer, unpack(args))
-                end
-            end
-            return obj
-        else
-            return function(...)
-                if rawget(pointer, '_next_super') then
-                    if not super_initialized then
+                    if pointer.__next_super then
                         local super_args = {...}
-                        if super_args[1] == self_pointer then super_args = slice_t(super_args, 2, #super_args) end
+                        if super_args[1] == pointer then super_args = slice_t(super_args, 2, #super_args) end
 
-                        Object.new(rawget(pointer, '_next_super'), super_args, pointer)
+                        pointer.__next_super.__prototype_self(pointer, super_args)
+                        --create_instance(super_class, super_args, pointer);
             
                         -- done.
                         super_initialized = true;
                     else
-                        -- Index super's get member
-                        print 'index super'
+                        error('Class \'' .. class.__name .. '\' does not have a super class!');
                     end
-                else
-                    error('Class \'' .. class_type .. '\' does not have a super class!');
                 end
+            else
+                -- index super
+                local container = super_class.__get_instance_member(key)
+                if _typeof(container) ~= 'nil' then
+                    return get_value(pointer, container, function(container, args)
+                        return container.val(pointer, unpack(args))
+                    end)
+                end
+                return container
             end
-        end
-    end
-
-    local function on_pointer_newindex(pointer, key, val)
-        local container = get_member(key)
-
-        if _typeof(container) ~= 'Container' then
-            -- parse key
-            new_key, new_val = parse_key(key, val);
-
-            -- set to self members
-            self_members[new_key] = new_val;
-        else
-            -- set to self members
-            self_members[key] = set_container_value(container, val);
-        end
-    end
-    
-    -- CREATE SELF OBJECT --
-    self_pointer = setmetatable({
-        _next_super = super_class;
-        _members = members;
-    }, {
-        __index = on_pointer_index;
-        __newindex = on_pointer_newindex;
+        end;
     })
 
+    assert(meta.__init ~= nil, '\'__init\' does not exist in class \'' .. class.__name .. '\'')
+
     -- call init
-    if _typeof(meta.__init) == 'Container' then
-        get_container_value(nil, meta.__init, function(container, args)
-            container.val(self_pointer, unpack(args))
-        end)(unpack(init_args))
-    else
-        meta.__init(self_pointer, unpack(init_args))
-    end
+    get_value(class, meta.__init, function(container, args)
+        container.val(self_pointer, unpack(args))
+    end)(unpack(init_args))
 
     -- unpack all meta data from containers 
     -- (will make exceptions for comparison operations)
     do
         local temp_meta = {}
-        for i, v in next, meta do
-            temp_meta[i] = get_raw_val(v);
+        for i, c in next, meta do
+            temp_meta[i] = c.val;
         end
         meta = temp_meta;
     end
-    
-    -- If there's no child_pointer, create a new object.
 
     return setmetatable({
-        _hierarchy = rawget(class, '_hierarchy');
+        __baseclass = class.__baseclass;
+        __hierarchy = class.__hierarchy;
+        __name = class.__name;
     }, merge({
-        __type = class_type;
         __index = function(self, key)
-            local obj 
             if key:sub(1, 1) ~= '_' then
-                obj = get_member(key);
-            end
+                obj = self_members[key];
 
-            local obj_t = _typeof(obj)
+                if _typeof(obj) == 'nil' and super_class then
+                    -- get from super
+                    obj = super_class.__get_instance_member(key)
+                end
 
-            if obj_t == 'Container' then
-                local val = get_container_value(self, obj, function(container, args)
-                    return container.val(self_pointer, unpack(args))
-                end)
-                return val
-            elseif obj_t == 'function' then
-                return function(...)
-                    local args = {...}
-                    if args[1] == self then args = slice_t(args, 2, #args) end
-                    
-                    return obj(self_pointer, unpack(args))
+                if _typeof(obj) ~= 'nil' then
+                    return get_value(self, obj, function(container, args)
+                        return container.val(self_pointer, unpack(args))
+                    end)
                 end
             end
-
-            return obj
         end;
 
         __newindex = function(self, key, val)
             if key:sub(1, 1) ~= '_' then
-                local obj = get_member(key)
-                if _typeof(obj) == 'Container' then
-                    self_members[key] = set_container_value(obj, val);
+                local previous = self_members[key]
+
+                if previous == nil then
+                    -- parse key
+                    new_key, new_val = parse_key(key, val);
+
+                    -- set to self members
+                    self_members[new_key] = new_val;
                 else
-                    self_members[key] = val;
+                    -- set to self members
+                    self_members[key] = set_value(previous, val);
                 end
             else
                 error('Cannot set a private value!')
@@ -1384,7 +1310,7 @@ function Object.new(class, init_args, child_pointer)
                 return meta.__tostring(self_pointer);
             end
 
-            return class_type
+            return "instance '" .. self.__name .. "'"
         end;
     }, meta))
 end
@@ -1395,198 +1321,152 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
-    --[[
-        BaseClass is a lua-class that contains skeleton for any type of class.
-        
-        - Private members are prefixed with one underscore '_'
-        - Meta members are prefixed with two underscores '__'
-        - Static members are capitalized
-        - Instance members are uncapitalized
-        - ':' or '.' works the same for calling methods
-        - Type declarations occur in keys
-            + function declarations do not cut undefined parameters
-                * skip defining a type by adding a comma: 'f(num,,str)'
+local function create_base_class(name, members, super_class)
+    --@ base classes are skeleton classes
+    --@ no member sorting
+    --@ no functionality
 
-        - Instantiate by calling [class]([class args])
-
-
-
-        BaseClass.new(members, super_class)
-            members <- super_class' members (pre-formatted)
-            parse_keys(members)
-                returns table<new_key, Container | any>
-            sort_members(table<new_key, Container | any>)
-                - 
-
-    --]]
-local BaseClass = {}
-function BaseClass.new(members, super_class)
-    local hierarchy = '';
-
-    if super_class then
-        --[[
-            for inheritancee
-
-            on __init(), the super's __init() has to be called.
-            then we when cant find a member in this class, just index super and it'll index its super and so on.
-        --]]
-        hierarchy = rawget(super_class, '_hierarchy') .. '.';
-    end
-
-    -- parse_keys() returns a table mixed with Containers and real values
+    name = name or '';
+    
+    -- parse_keys() returns a table mixed with "containers" and real values
     -- (from entries that didn't use static typing)
     members = parse_keys(members)
-    -- now we sort the members into public and private instance or static members (also meta)
+
+    local hierarchy = name ~= '' and name or '<anonymous>';
+    if super_class then
+        hierarchy = rawget(super_class, '__hierarchy') .. '.' .. hierarchy;
+    end
+
+    -- clear out some meta entries
+    members.__index = nil;
+    members.__newindex = nil;
+
+    return {
+        -- a reference to BaseClass, used to tell identify a class from a table
+        __baseclass = BaseClass;
+        __hierarchy = hierarchy;
+        __name = name;
+
+        __super = super_class;
+        __members = members;
+    }
+end
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+local function create_complex_class(name, members, super_class)
+    --@ Complex classes are classes that contain both instance and static members.
+    local class = create_base_class(name, members, super_class);
+
+    -- might change this
+    -- local class = deep_copy_t(base_class)
+    
+    -- we sort the members into public and private instance or static members (also meta)
     local instance_members
     local static_members
     local meta 
-    instance_members, static_members, meta = sort_members(members)
-    -- NOW! We can finally use these objects 
+    instance_members, static_members, meta = sort_members(class.__members)
 
-    -- Lets make some checks
-    if not meta.__type then error('__type is not defined in class.') end
-    assert(_typeof(meta.__type) == 'string', '__type is not a string.')
+    -- reset this
+    class.__baseclass = BaseClass;
+    class.__meta = meta;
+    class.__static_members = static_members;
+    -- prototype of instance
+    class.__prototype = instance_members;
 
-    local class_type = meta.__type;
-    hierarchy = hierarchy .. class_type;
-
-    -- clear out some meta entries
-    meta.__index = nil;
-    meta.__newindex = nil;
-
-    -- especially this one
-    meta.__metatable = nil;
-
-    -- create a pointer for static members
-    local create_static_pointer;
-    do
-        local function get_member(key)
-            if _typeof(static_members.public[key]) ~= 'nil' then
-                return static_members.public[key]
-            elseif _typeof(static_members.private[key]) ~= 'nil' then
-                return static_members.private[key]
-            end
+    class.__get_static_member = function(key)
+        if (_typeof(static_members.public[key]) == 'nil'
+            and _typeof(static_members.private[key]) == 'nil')
+            and super_class then
+            -- call super's __get()
+            return super_class.__get_static_member(key)
         end
 
-        local function on_pointer_index(pointer, key)
-            if key == 'super' then
-                if super_class then
-                    if _typeof(super_class[key]) == 'function' then
-                        return function(...)
-                            local args = {...}
-                            if args[1] == pointer then args = slice_t(args, 2, #args) end
-                            -- replace super's self with self pointer
-                            return super_class[key](pointer, unpack(args));
-                        end
-                    end
-
-                    return super_class[key]
-                else
-                    error('Class \'' .. class_type .. '\' does not have a super class!');
-                end
-            else
-                local obj = get_member(key)
-                local obj_t = _typeof(obj)
-
-                if obj_t == 'Container' then
-                    return get_container_value(pointer, obj, function(container, args)
-                        -- all args checked out, call function
-                        return container.val(pointer, unpack(args))
-                    end)
-                elseif obj_t == 'function' then
-                    return function(...)
-                        local args = {...}
-                        if args[1] == pointer then args = slice_t(args, 2, #args) end
-                
-                        return obj(pointer, unpack(args))
-                    end
-                end
-                return obj
-            end
-        end
-
-        -- everything set on pointer is an instance member
-        local function on_pointer_newindex(pointer, key, val)
-            local container = get_member(key)
-            if _typeof(container) ~= 'Container' then
-                -- parse key
-                local new_key, root_container
-                new_key, root_container = parse_key(key, val)
-                -- determine access
-                static_members[determine_access(new_key)][new_key] = root_container;
-            else
-                static_members[determine_access(key)][key] = set_container_value(container, val)
-            end
-        end
-        
-        create_static_pointer = function()
-            return setmetatable({}, {
-                __index = on_pointer_index;
-                __newindex = on_pointer_newindex;
-            })
-        end
+        return static_members.public[key] or static_members.private[key]
     end
 
-    local static_pointer = create_static_pointer();
+    class.__get_instance_member = function(key)
+        if (_typeof(instance_members.public[key]) == 'nil'
+            and _typeof(instance_members.private[key]) == 'nil')
+            and super_class then
+            -- call super's __get()
+            return super_class.__get_instance_member(key)
+        end
 
-    local class = setmetatable({
-        -- we define this stuff for the Object class (everything must be individualized)
-        _super = super_class;
-        _hierarchy = hierarchy;
-        _type = class_type;
-        _instance_members = instance_members;
-        _static_members = static_members;
-        _meta = meta;
-    }, {
-        __type = type;
+        return instance_members.public[key] or instance_members.private[key]
+    end
 
-        -- index will retrieve public static members
-        __index = function(self, key)
-            local obj = self._static_members.public[key]
-            local obj_t = _typeof(obj)
+    -- takes self_pointer, changes next super and runs it through init function
+    class.__prototype_self = function(pointer, proto_init_args)
+        -- set next super
+        pointer.__next_super = super_class;
 
-            if obj_t == 'Container' then
-                local val = get_container_value(self, obj, function(container, args)
+        assert(meta.__init ~= nil, '\'__init\' does not exist in class \'' .. class.__name .. '\'')
+
+        -- initialize
+        get_value(nil, meta.__init, function(container, args)
+            container.val(pointer, unpack(args))
+        end)(unpack(proto_init_args))
+    end
+
+    -- static pointer
+    local static_pointer = create_static_pointer(class, super_class)
+    
+    return setmetatable(class, {
+        __index = function(class, key)
+            local obj = static_members.public[key]
+
+            if obj ~= nil then
+                return get_value(class, obj, function(container, args)
                     return container.val(static_pointer, unpack(args))
                 end)
-
-                -- if no container, check super
-                if _typeof(val) == 'nil' and super_class then
-                    return super_class[key]
-                end
-
-                -- return val
-                return val;
-            elseif obj_t == 'function' then
-                return function(...)
-                    local args = {...}
-                    if args[1] == self then args = slice_t(args, 2, #args) end
-
-                    return obj(static_pointer, unpack(args))
-                end
+            elseif super_class then
+                return super_class[key]
             end
             return obj
         end;
 
-        __newindex = function(self, key, val)
-            local obj_t = _typeof(self._static_members.public[key])
-            if obj_t == 'Container' then
-                -- set container value
-                self._static_members.public[key] = set_container_value(self._static_members.public[key], val)
-            else
-                -- set value
-                self._static_members.public[key] = val;
-            end
+        __newindex = function(class, key, val)
+            -- set container value
+            static_members.public[key] = set_value(static_members.public[key], val)
         end;
 
-        __call = function(self, ...)
-            if not meta.__init then error('__init is not defined in class \'' .. class_type ..'\'') end
+        __call = function(...)
+            local args = {...}
+            args = slice_t(args, 2, #args);
 
-            return Object.new(self, {...})
+            return create_instance(class, {...})
+        end;
+
+        __tostring = function(self)
+            return "complex class '" .. name .. "'";
         end;
     })
+end
+-- ------------------------------------------------------------------------------------------------------------------------------------------------------------
+--[[
+    Instances are created by calling [class]([class arguments]).
 
-    return class
+
+    - When an instance is created, the super class is not instantiated until __init(self) calls
+    self.super() for the first time.
+        + Then self.super will refer to the super's instance.
+--]]
+local function create_instance_class(members, super)
+    local class = create_base_class(members, super);
+    -- meta checks
+    if not class.__meta.__init then error('__init is not defined in class \'' .. class.__name ..'\'') end
+
+
+    return setmetatable(class, {
+        __call = function(...)
+            local args = {...}
+            args = slice_t(args, 2, #args);
+
+            return create_instance(class, {...})
+        end
+    })
+end
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+local function create_static_class()
 end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- This section of the script is for exporting.
@@ -1594,15 +1474,25 @@ end
 local export = {};
 
 export.typeof = _typeof;
+export.is_a_class = is_a_class;
 
-function export.class(superClass)
-    return function(members)
-        return BaseClass.new(members, superClass)
-    end;
+function export.class(name)
+    assert(_typeof(name) == 'string', 'Class name must be a string!');
+
+    return function(super_class)
+        return function(members)
+            assert(_typeof(members) == 'table', 'Class must have a members table!');
+
+            return create_complex_class(name, members, super_class)
+        end
+    end
 end
 
-function export.instanceof(obj, class_type)
-    local hierarchy = rawget(obj, '_hierarchy');
+-- function export.interface(super_interface)
+-- end
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+function export.instanceof(obj, class_name)
+    local hierarchy = rawget(obj, '__hierarchy');
     local list = {};
 	local str = "";
 	
@@ -1610,17 +1500,20 @@ function export.instanceof(obj, class_type)
 		if (char ~= '.') then
 			str = str..char;
         else
-            if str == class_type then
+            if str == class_name then
                 return true
             end
 		end
 	end
 	
-	if str == class_type then
+	if str == class_name then
         return true
     end
 
     return false;
+end
+
+function export.mixin(to, from)
 end
 
 return export

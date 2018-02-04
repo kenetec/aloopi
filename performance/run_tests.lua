@@ -1,6 +1,6 @@
-local file = io.open('./performance/results/' .. os.time(), 'w');
+local file = io.open('./performance/results/' .. os.time() .. '.txt', 'w');
 
-local time = require 'performance.time' (file);
+local time = require 'performance.time' (file, 10000);
 
 local tests = {
     'base_class_creation',

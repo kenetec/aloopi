@@ -1,14 +1,14 @@
 # aloopi
 **Another Lua OOP Implementation.**
 
-aloopi provides a clean and effective solution to OOP in Lua that includes:
+aloopi provides a neat solution to OOP in Lua that includes:
 
 + **Classes**
     + Inheritance
     + Static members
     + Public and private access
     + Custom meta
-	    + With the exception of `__index, __newindex, __metatable`
+	    + With the exception of `__index, __newindex`
     + Static typing for variables and functions
 	    + Supports multidimensional arrays
             + `f([,]num)` -> two-dimensional array of infinite numbers
@@ -32,17 +32,16 @@ aloopi provides a clean and effective solution to OOP in Lua that includes:
 + example: `const FAVORITE_NUM`
 
  `_` prefix for private members.
+
  `__` prefix for meta members.
  
  **Defining a class**
  ```lua
- local Fruit = aloopi.class() {
-	 -- All classes must define '__type'
-	 __type = 'Fruit';
-	 
-	 --  For objects to be instantiated, a class must define `__init()` as well.
-	 ['__init(str, num)'] = function(self, name, yumminess)
-	 end;
+-- aloopi.class (name of class) (super class) (class members)
+local Fruit = aloopi.class 'Fruit' () {	
+	--  For objects to be instantiated, a class must define `__init()` as well.
+	['__init(str, num)'] = function(self, name, yumminess)
+	end;
 }
 
 -- Instantiation by calling the class.
@@ -53,7 +52,7 @@ local apple = Fruit('Apple', 10)
 This module returns:
         
 ```lua
-BaseClass   class(BaseClass super_class) -> (table members)
+BaseClass   class(string name) -> (BaseClass super_class) -> (table members)
 ```
 ```lua
 string      typeof(any object)
@@ -61,9 +60,9 @@ string      typeof(any object)
 + retrieves `__type` from given class or `type(object)`/`typeof(object)`
 
 ```lua
-bool        instanceof(BaseClass object, string class_type)
+bool        instanceof(BaseClass object, string class_name)
 ```
-+ returns `true` if object is derived from `class_type`.
++ returns `true` if object is derived from `class_name`.
 
 ## Type Declarations    
 ```lua
@@ -165,8 +164,8 @@ const_declaration   =   'const' key_declaration
 
 key_declaration     =   var_declaration | fn_declaration  
 
-var_declaration     =   identifier ':' type_expression
-fn_declaration      =   identifier '(' fn_type_expression... ')'
+var_declaration     =   IDENTIFIER ':' type_expression
+fn_declaration      =   IDENTIFIER '(' fn_type_expression... ')'
 
 fn_type_expression  =   type_expression ['...']
 type_expression     =   array_expression | table_expression | datatype

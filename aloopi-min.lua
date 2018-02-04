@@ -1,314 +1,283 @@
 
-local function iD1IUx(nSBOx7)local u={}for Ki1,zz1QI in next,nSBOx7 do u[Ki1]=zz1QI end;return u end
-local function JLCOx_ak(kFTAh)
-local function LBf(dijn4Ph)local CO1={}
-for RlZo,SUn in next,dijn4Ph do if type(SUn)=='table'then CO1[RlZo]=JLCOx_ak(SUn)else
-CO1[RlZo]=SUn end end;return CO1 end;return LBf(kFTAh)end
-local function hPQ(Ib4,fjV1G2)local Do=Ib4 or{}for _,TqYJ4 in next,fjV1G2 do Do[_]=TqYJ4 end;return Do end
-local function R1FIoQI(DI,b)local E=DI or{}for KMw7_i1s,CQi in next,b do
-if type(DI[KMw7_i1s])=='nil'then E[KMw7_i1s]=CQi end end;return E end
-local function NsoTwDs(nHlJ)local lw4Q7kbl=0;for IN,QYf1 in next,nHlJ do lw4Q7kbl=lw4Q7kbl+1 end;return lw4Q7kbl end
-local function HGli(RfsnisO)for lvW2ga,T7RKP in next,RfsnisO do print(lvW2ga,T7RKP)end end
-local function iy(_L6Bs)local SH={}for wU4wYbA9,fFeQcIM in next,_L6Bs do SH[fFeQcIM]=fFeQcIM end;return SH end
-local function m6SCS0(JEHSHPh3,bb,o5e6fP)local iq7ol={}local eMV=1
-for WDTNkTD=bb,o5e6fP do iq7ol[eMV]=JEHSHPh3[WDTNkTD]eMV=eMV+1 end;return iq7ol end;local function NUhYw6R4(Oejsws)
-if Oejsws then if Oejsws:match('^[a-zA-Z_]$')then return true end end;return false end;local function Hv(CkD73N0)if CkD73N0 then if
-CkD73N0:match('^[a-zA-Z_0-9]$')then return true end end
-return false end;local function Ch(PlwhaRKJ)if PlwhaRKJ then if
-PlwhaRKJ:match('^[ \t\n]$')then return true end end
-return false end
-local urkh=iy{'string','number','function','table','boolean','userdata','thread','nil','any'}
-local function zhzpBSx(Caz4NM4Z)local XVxxx=typeof and typeof or type;local hD=XVxxx(Caz4NM4Z)
-if hD==
-'table'then
-local G5BuU5,AfwsY=pcall(function()return getmetatable(Caz4NM4Z)end)
-if G5BuU5 then if XVxxx(AfwsY)=='table'then
-if AfwsY.__type then return AfwsY.__type end end end end;return urkh[hD]or hD end
-local rHSjalVy={mt={__type='Container'},base={type='',dt='any',val=nil,raw_key=''}}function rHSjalVy.new()
-return setmetatable(rHSjalVy.base,rHSjalVy.mt)end;function rHSjalVy.copy(T)local WZs=iD1IUx(T)return
-setmetatable(WZs,rHSjalVy.mt)end
-function rHSjalVy.fn(ITdz)return
-setmetatable(R1FIoQI({type='fn',dt='function',params={}},
-ITdz and ITdz or rHSjalVy.base),rHSjalVy.mt)end
-function rHSjalVy.var(AjfoUo)return
-setmetatable(R1FIoQI({type='var'},AjfoUo and AjfoUo or rHSjalVy.base),rHSjalVy.mt)end
-function rHSjalVy.datatype(Er9zidsB)return
-setmetatable(R1FIoQI({type='datatype'},Er9zidsB and Er9zidsB or rHSjalVy.base),rHSjalVy.mt)end
-function rHSjalVy.array(X)return
-setmetatable(R1FIoQI({type='array',dt='table',val_dt='',val_optional=false,dimensions={}},X and X or
-rHSjalVy.base),rHSjalVy.mt)end
-function rHSjalVy.dictionary(dR)
-return
-setmetatable(R1FIoQI({type='dictionary',dt='table',key_dt='',key_optional=false,val_dt='',val_optional=false},
-dR and dR or rHSjalVy.base),rHSjalVy.mt)end
-function rHSjalVy.vargs(JFXtQwy)return
-setmetatable(R1FIoQI({vargs=true},JFXtQwy and JFXtQwy or rHSjalVy.base),rHSjalVy.mt)end
-function rHSjalVy.const(uMV17h0)return
-setmetatable(R1FIoQI({const=true},uMV17h0 and uMV17h0 or rHSjalVy.base),rHSjalVy.mt)end
-function rHSjalVy.optional(E2NZK)return
-setmetatable(R1FIoQI({optional=true},E2NZK and E2NZK or rHSjalVy.base),rHSjalVy.mt)end
-local function TjhsnP(WNWWe,zMzjn3lk)
-if zhzpBSx(zMzjn3lk)=='table'then
-local Trkkpmd=NsoTwDs(WNWWe.dimensions)
-local function L(GGv,ZIzh4Si)local c8D4n81=WNWWe.dimensions[ZIzh4Si]
-if c8D4n81 >0 then if
-NsoTwDs(GGv)~=c8D4n81 then
-error('Array does not contain '.. (c8D4n81 >0 and c8D4n81 or'any')..
-' items')end end
-for cSjJHx,fa in next,GGv do if zhzpBSx(cSjJHx)~='number'then
+local function R1FIoQI(dijn4Ph)local CO1={}for RlZo,SUn in next,dijn4Ph do CO1[RlZo]=SUn end;return CO1 end
+local function NsoTwDs(Ib4)
+local function fjV1G2(Do)local _={}for TqYJ4,DI in next,Do do
+if type(DI)=='table'then _[TqYJ4]=NsoTwDs(DI)else _[TqYJ4]=DI end end;return _ end;return fjV1G2(Ib4)end
+local function HGli(b,E)local KMw7_i1s=b or{}for CQi,nHlJ in next,E do
+if type(b[CQi])=='nil'then KMw7_i1s[CQi]=nHlJ end end;return KMw7_i1s end
+local function iy(lw4Q7kbl)local IN=0;for QYf1,RfsnisO in next,lw4Q7kbl do IN=IN+1 end;return IN end
+local function m6SCS0(lvW2ga)for T7RKP,_L6Bs in next,lvW2ga do print(T7RKP,_L6Bs)end end
+local function NUhYw6R4(SH)local wU4wYbA9={}
+for fFeQcIM,JEHSHPh3 in next,SH do wU4wYbA9[JEHSHPh3]=JEHSHPh3 end;return wU4wYbA9 end
+local function Hv(bb,o5e6fP,iq7ol)local eMV={}local WDTNkTD=1
+for Oejsws=o5e6fP,iq7ol do eMV[WDTNkTD]=bb[Oejsws]WDTNkTD=WDTNkTD+1 end;return eMV end;local function Ch(CkD73N0)
+if CkD73N0 then if CkD73N0:match('^[a-zA-Z_]$')then return true end end;return false end;local function urkh(PlwhaRKJ)if PlwhaRKJ then if
+PlwhaRKJ:match('^[a-zA-Z_0-9]$')then return true end end;return
+false end
+local zhzpBSx=NUhYw6R4{'string','number','function','table','boolean','userdata','thread','nil','any'}local rHSjalVy={}
+local function TjhsnP(Caz4NM4Z)local XVxxx=typeof and typeof or type
+local hD=XVxxx(Caz4NM4Z)if hD=='table'then
+if rawget(Caz4NM4Z,'__baseclass')==rHSjalVy then return true end end end
+local function t5jzEd9(G5BuU5)local AfwsY=typeof and typeof or type;local T=AfwsY(G5BuU5)
+if
+T=='table'then if rawget(G5BuU5,'__baseclass')==rHSjalVy then
+return rawget(G5BuU5,'__name')end end;return zhzpBSx[T]or T end
+local function JZAU2(WZs,ITdz,AjfoUo)
+if t5jzEd9(ITdz)=='table'then local Er9zidsB=iy(WZs.dimensions)
+local function X(dR,JFXtQwy)
+local uMV17h0=WZs.dimensions[JFXtQwy]
+if uMV17h0 >0 then if iy(dR)~=uMV17h0 then
+error('Array does not contain '..
+(uMV17h0 >0 and uMV17h0 or'any')..' items')end end
+for E2NZK,WNWWe in next,dR do if t5jzEd9(E2NZK)~='number'then
 error('Element in dimension \''..
-ZIzh4Si..'\' does not have numerical keys.')end
-if ZIzh4Si<Trkkpmd then if
-zhzpBSx(fa)=='table'then L(fa,ZIzh4Si+1)else
-error('Expected item in dimension '..tostring(Trkkpmd)..
-', got '..zhzpBSx(fa)..' instead.')end else
-for M,fa in next,GGv do
+JFXtQwy..'\' does not have numerical keys.')end
+if JFXtQwy<Er9zidsB then
 if
-zhzpBSx(fa)~=WNWWe.val_dt then
-if zhzpBSx(fa)=='nil'and WNWWe.val_optional then else
-error(
-'Element in dimension \''..ZIzh4Si..'\' at index \''..
-M..'\' is not of datatype \''..WNWWe.val_dt..'\'')end end end end end end;L(zMzjn3lk,1)else
-error('Got: \''..zhzpBSx(zMzjn3lk)..
-'\' instead of an array of \''..WNWWe.dt..'\' in \''..
-WNWWe.raw_key..'\'')end end
-local function t5jzEd9(dIZlrvD,jQgsATKd)local aBbGg=dIZlrvD.type;local D9=dIZlrvD.key_dt;local G=dIZlrvD.key_optional
-local gE=dIZlrvD.val_dt;local QgC=dIZlrvD.val_optional
-if zhzpBSx(jQgsATKd)=='table'then
-for CYoa,K3ipRr in next,jQgsATKd do
+t5jzEd9(WNWWe)=='table'then X(WNWWe,JFXtQwy+1)else
+error('Expected item in dimension '..
+
+tostring(Er9zidsB)..', got '..t5jzEd9(WNWWe)..' instead.')end else
+for zMzjn3lk,WNWWe in next,dR do
+if t5jzEd9(WNWWe)~=WZs.val_dt then
 if
-zhzpBSx(CYoa)~=D9 then
-if zhzpBSx(CYoa)=='nil'and QgC then else
+t5jzEd9(WNWWe)=='nil'and WZs.val_optional then else
+error('Element in dimension \''..
+JFXtQwy..'\' at index \''..zMzjn3lk..
+'\' is not of datatype \''..WZs.val_dt..'\'')end end end end end end;X(ITdz,1)else
+error('Got: \''..
+t5jzEd9(ITdz)..'\' instead of an array of \''..WZs.dt..
+'\' in \''..AjfoUo..'\'')end end
+local function zPXTTg(Trkkpmd,L,GGv)local ZIzh4Si=Trkkpmd.ct;local c8D4n81=Trkkpmd.key_dt;local cSjJHx=Trkkpmd.key_optional
+local fa=Trkkpmd.val_dt;local M=Trkkpmd.val_optional
+if t5jzEd9(L)=='table'then
+for dIZlrvD,jQgsATKd in next,L do
+if
+t5jzEd9(dIZlrvD)~=c8D4n81 then
+if t5jzEd9(dIZlrvD)=='nil'and M then else
 error('Keys\' datatype is \''..
-zhzpBSx(CYoa)..'\', not datatype \''..
-D9 ..'\' in \''..dIZlrvD.raw_key..'\'')end end
-if zhzpBSx(K3ipRr)~=gE then
-if zhzpBSx(K3ipRr)=='nil'and QgC then else
+t5jzEd9(dIZlrvD)..
+'\', not datatype \''..c8D4n81 ..'\' in \''..GGv..'\'')end end
+if t5jzEd9(jQgsATKd)~=fa then
+if t5jzEd9(jQgsATKd)=='nil'and M then else
 error(
-'Values\' datatype is \''..zhzpBSx(CYoa)..'\', not datatype \''..
-D9 ..'\' in \''..dIZlrvD.raw_key..'\'')end end end else
-error('Got: \''..
-zhzpBSx(jQgsATKd)..'\' instead of a dictionary of \''..
-D9 ..'\' to \''..gE..'\' in \''..
-dIZlrvD.raw_key..'\'')end end
-local function JZAU2(F2tY,rb21L2)local o_v255=F2tY.type;local wUVm=F2tY.dt;local VQ=zhzpBSx(rb21L2)
-if VQ==wUVm then
-if
-o_v255 =='array'then TjhsnP(F2tY,rb21L2)elseif o_v255 =='dictionary'then t5jzEd9(F2tY,rb21L2)end elseif VQ=='nil'and F2tY.optional then elseif wUVm=='any'then else
-error('Got: \''..
-VQ..'\' instead of \''..wUVm..'\' in \''..
-F2tY.raw_key..'\'')end end
-local function zPXTTg(oTYNsnP,I)for L,mR5gwW in next,I do JZAU2(oTYNsnP,mR5gwW)end end
-local function seMLr(DfbW,sh,rrFLbCtj)
-if zhzpBSx(sh.val)=='function'then
+'Values\' datatype is \''..t5jzEd9(dIZlrvD)..
+'\', not datatype \''..c8D4n81 ..'\' in \''..GGv..'\'')end end end else
+error('Got: \''..t5jzEd9(L)..
+'\' instead of a dictionary of \''..c8D4n81 ..'\' to \''..fa..
+'\' in \''..Trkkpmd.raw_key..'\'')end end
+local function seMLr(aBbGg,D9,G)local gE=aBbGg.ct;local QgC=aBbGg.dt;local CYoa=t5jzEd9(D9)
+if CYoa==QgC then
+if gE=='array'then
+JZAU2(aBbGg,D9,G)elseif gE=='dictionary'then zPXTTg(aBbGg,D9,G)end elseif CYoa=='nil'and aBbGg.optional then elseif QgC=='any'then else
+error('Got: \''..CYoa..'\' instead of \''..QgC..
+'\' in \''..G..'\'')end end
+local function qX(K3ipRr,F2tY,rb21L2)for o_v255,wUVm in next,F2tY do seMLr(K3ipRr,wUVm,rb21L2)end end
+local function h_8(VQ,oTYNsnP,I)
+if oTYNsnP.ct=='fn'then
 return
-function(...)local YcPea0vg={...}
-if#YcPea0vg>0 then if DfbW then
-if YcPea0vg[1]==
-DfbW then YcPea0vg=m6SCS0(YcPea0vg,2,#YcPea0vg)end end
-if sh.type=='fn'then
-for usLpLoaH,e7dv in next,sh.params do
-if
-e7dv.vargs==true then
-zPXTTg(e7dv,m6SCS0(YcPea0vg,usLpLoaH,#YcPea0vg))break else JZAU2(e7dv,YcPea0vg[usLpLoaH])end end end end;return rrFLbCtj(sh,YcPea0vg)end end;return sh.val end
-local function qX(inx0,A5k5yt)local B7SHDx7h=rHSjalVy.copy(inx0)
-if inx0.const then
-error('Cannot change value of a constant!')else JZAU2(inx0,A5k5yt)B7SHDx7h.val=A5k5yt end;return B7SHDx7h end;local function h_8(EEpoeR)
-if zhzpBSx(EEpoeR)=='Container'then return EEpoeR.val end;return EEpoeR end
-local function xL7OTb(_k)if
-(_k:sub(1,1)=='_')then return'private'else return'public'end end;local w8T3f;local K
+function(...)local L={...}
+if#L>0 then
+if VQ then if L[1]==VQ then L=Hv(L,2,#L)end end
+if oTYNsnP.params then
+for mR5gwW,DfbW in next,oTYNsnP.params do
+if DfbW.vargs==true then
+qX(DfbW,Hv(L,mR5gwW,#L),oTYNsnP.raw_key)break else seMLr(DfbW,L[mR5gwW],oTYNsnP.raw_key)end end end end;return I(oTYNsnP,L)end end;return oTYNsnP.val end
+local function xL7OTb(sh,rrFLbCtj)
+if not sh.const then if sh.ct~=''then seMLr(sh,rrFLbCtj)end
+sh.val=rrFLbCtj else error('Cannot change value of a constant!')end;return sh end;local function w8T3f(YcPea0vg)
+if(YcPea0vg:sub(1,1)=='_')then return'private'else return'public'end end
+local function K(usLpLoaH)return
+usLpLoaH:find(':')or
+usLpLoaH:find('%(')or usLpLoaH:sub(1,6)=='const 'end;local qL;local vfIyB
 do
-local Ef=iy{'(',')','[',']',',',':','<','>','.','?'}local KfM=iy{'const'}local Vd={}
-function Vd.new(s4ggux,hrVI4meU,xEq6TAF)
-return
-setmetatable({type=s4ggux,lexme=hrVI4meU,literal=xEq6TAF},{__tostring=function(UIjls)return
-UIjls.type..
-'\t'..UIjls.lexme..'\t'..tostring(xEq6TAF)end})end;local Oynw
-do local jdLnB0vD=0;local PSlD={}local nN={}
-local function J()if jdLnB0vD+1 <=#PSlD then jdLnB0vD=jdLnB0vD+1;return
-PSlD[jdLnB0vD]end end;local function A()
-if jdLnB0vD+1 <=#PSlD then return PSlD[jdLnB0vD+1]end end;local function g3Qeqnr(qHpY64,z,qccJ5b)
-nN[#nN+1]=Vd.new(qHpY64,z,qccJ5b)end
-Oynw=function(ARuba)jdLnB0vD=0;PSlD={}nN={}for XRfQ in
-ARuba:gmatch('.')do PSlD[#PSlD+1]=XRfQ end;local Wo53nZ=J()
-while Wo53nZ~=nil do
-if not
-Ef[Wo53nZ]then
-if NUhYw6R4(Wo53nZ)then local gFPRdEC=Wo53nZ;if A()then
-if Hv(A())then Wo53nZ=J()while Hv(Wo53nZ)do
-gFPRdEC=gFPRdEC..Wo53nZ;Wo53nZ=J()end else Wo53nZ=J()end end;if KfM[gFPRdEC]then
-g3Qeqnr(gFPRdEC,gFPRdEC)else g3Qeqnr('ID',gFPRdEC)end elseif
-tonumber(Wo53nZ)then local lw9gLt3=Wo53nZ;if A()then
-if tonumber(A())then Wo53nZ=J()while tonumber(Wo53nZ)do
-lw9gLt3=lw9gLt3 ..Wo53nZ;Wo53nZ=J()end else Wo53nZ=J()end end
-g3Qeqnr('NUMBER',lw9gLt3,tonumber(lw9gLt3))elseif Ch(Wo53nZ)then Wo53nZ=J()end elseif Ef[Wo53nZ]then g3Qeqnr(Wo53nZ,Wo53nZ)Wo53nZ=J()else error('Unknown character \''..
-Wo53nZ..'\'.')end end;return nN end end
-local QBO={['str']='string',['num']='number',['fn']='function',['tab']='table',['bool']='boolean',['usd']='userdata',['thr']='thread'}
-do local T=0;local I5={}local JmE;local s4=''local FFG=''local a31jEAS;local function LS4h()
-if T+1 <=#I5 then T=T+1;return I5[T]end end;local function eux092_P(IWQcC)if JmE then
-if JmE.type==IWQcC then return true end end end
-local function ZA9(cvRh)if
-JmE.type==cvRh then local W9yaJm=JmE;JmE=LS4h()return W9yaJm else
+local e7dv=NUhYw6R4{'(',')','[',']',',',':','<','>','.','?'}local inx0=NUhYw6R4{'const'}
+local function A5k5yt(EEpoeR)local _k=1;local Ef={}
+local KfM=EEpoeR:sub(_k,_k)
+while _k<=EEpoeR:len()do
+if not e7dv[KfM]then
+if Ch(KfM)then local Vd=KfM
+local Oynw=EEpoeR:sub(_k+1,_k+1)
+if Oynw then if urkh(Oynw)then _k=_k+1;KfM=EEpoeR:sub(_k,_k)while urkh(KfM)do Vd=Vd..KfM
+_k=_k+1;KfM=EEpoeR:sub(_k,_k)end else _k=_k+1
+KfM=EEpoeR:sub(_k,_k)end end;if inx0[Vd]then Ef[#Ef+1]={type=Vd,lexme=Vd}else
+Ef[#Ef+1]={type='ID',lexme=Vd}end elseif tonumber(KfM)then local QBO=KfM
+local s4ggux=EEpoeR:sub(_k+1,_k+1)
+if s4ggux then
+if tonumber(s4ggux)then _k=_k+1;KfM=EEpoeR:sub(_k,_k)while tonumber(KfM)do
+QBO=QBO..KfM;_k=_k+1;KfM=EEpoeR:sub(_k,_k)end else
+_k=_k+1;KfM=EEpoeR:sub(_k,_k)end end;Ef[#Ef+1]={type='NUMBER',lexme=QBO}elseif KfM:match('^[ \t\n]$')then
+_k=_k+1;KfM=EEpoeR:sub(_k,_k)end elseif e7dv[KfM]then Ef[#Ef+1]={type=KfM,lexme=KfM}_k=_k+1
+KfM=EEpoeR:sub(_k,_k)else
+error('Unknown character \''..KfM..'\'.')end end;return Ef end
+local B7SHDx7h={['str']='string',['num']='number',['fn']='function',['tab']='table',['bool']='boolean',['usd']='userdata',['thr']='thread'}
+do local hrVI4meU=0;local xEq6TAF={}local UIjls;local jdLnB0vD=''local PSlD=''local nN;local function J(I5)if UIjls then
+if UIjls.type==I5 then return true end end end
+local function A(JmE)
+if
+UIjls.type==JmE then local s4=UIjls;if hrVI4meU+1 <=#xEq6TAF then hrVI4meU=hrVI4meU+1
+UIjls=xEq6TAF[hrVI4meU]end;return s4 else
 error('Got \''..
-JmE.type..'\' instead of \''..cvRh..'\' in \''..
-s4 ..'\'')end end
-local function hWgmxm(oJ1ec)if urkh[oJ1ec]or QBO[oJ1ec]then
-return urkh[oJ1ec]or QBO[oJ1ec]end;return oJ1ec end;local UBg54E
-local function gQGq(L)L=rHSjalVy.datatype(L)
-local MMNWLk=hWgmxm(ZA9'ID'.lexme)L.dt=MMNWLk
-if eux092_P'?'then ZA9'?'L=rHSjalVy.optional(L)end;return L end
-local function OyHc5FEv(x6Ni)x6Ni=rHSjalVy.array(x6Ni)x6Ni.raw_key=s4;ZA9'['local Q2waXkyp=1;x6Ni.dimensions[Q2waXkyp]=
--1
+UIjls.type..'\' instead of \''..JmE..'\' in \''..
+jdLnB0vD..'\'')end end;local function g3Qeqnr(FFG)
+return zhzpBSx[FFG]or B7SHDx7h[FFG]or FFG end;local qHpY64
+local function z(a31jEAS)a31jEAS.ct='array'
+a31jEAS.dimensions={}A'['local LS4h=1;a31jEAS.dimensions[LS4h]=-1
 while true do
-if eux092_P'NUMBER'then
-x6Ni.dimensions[Q2waXkyp]=tonumber(ZA9'NUMBER'.lexme)elseif eux092_P','then ZA9','Q2waXkyp=Q2waXkyp+1
-x6Ni.dimensions[Q2waXkyp]=-1 elseif eux092_P']'then break else
-error('Invalid array expression in \''..s4 ..'\'')break end end;ZA9']'return x6Ni end
-local function Dn1Xi(EG72)EG72.dt=hWgmxm(ZA9'ID'.lexme)
-if eux092_P'<'then ZA9'<'
-local mlTMZ=rHSjalVy.datatype()mlTMZ.raw_key=s4;mlTMZ=UBg54E(mlTMZ)
-if eux092_P','then ZA9','
-EG72=rHSjalVy.dictionary(EG72)EG72.key_dt=mlTMZ.dt;EG72.key_optional=mlTMZ.optional
-local q=rHSjalVy.datatype()q.raw_key=s4;q=UBg54E(q)EG72.val_dt=q.dt;EG72.val_optional=q.optional else
-EG72=rHSjalVy.array(EG72)EG72.dt=mlTMZ.dt;EG72.dimensions[1]=-1 end;ZA9'>'end
-if eux092_P'?'then ZA9'?'EG72=rHSjalVy.optional(EG72)end;return EG72 end
-UBg54E=function(xb6)
-if eux092_P'['then xb6=OyHc5FEv(xb6)local yK=UBg54E(xb6)xb6.val_dt=yK.dt
-xb6.val_optional=yK.optional elseif eux092_P'ID'then if hWgmxm(JmE.lexme)=='table'then xb6=Dn1Xi(xb6)else
-xb6=gQGq(xb6)end else
-error('Expected a type_expression in \''..xb6.raw_key..'\'')end;return xb6 end;local function _gGmBBE()ZA9':'a31jEAS=UBg54E(a31jEAS)
-a31jEAS=rHSjalVy.var(a31jEAS)end
-local function rIX4(rHLz2GD)rHLz2GD=UBg54E(rHLz2GD)
+if J'NUMBER'then
+a31jEAS.dimensions[LS4h]=tonumber(A'NUMBER'.lexme)elseif J','then A','LS4h=LS4h+1;a31jEAS.dimensions[LS4h]=-1 elseif J']'then break else
+error(
+'Invalid array expression in \''..jdLnB0vD..'\'')break end end;A']'return a31jEAS end
+local function qccJ5b(eux092_P)eux092_P.dt=g3Qeqnr(A'ID'.lexme)
+if J'<'then A'<'local ZA9=qHpY64()
+if J','then
+A','eux092_P.ct='dictionary'eux092_P.key_dt=ZA9.dt
+eux092_P.key_optional=ZA9.optional;local hWgmxm=qHpY64()eux092_P.val_dt=hWgmxm.dt
+eux092_P.val_optional=hWgmxm.optional else eux092_P.ct='array'eux092_P.val_dt=ZA9.dt
+eux092_P.dimensions[1]=-1 end;A'>'end;if J'?'then A'?'eux092_P.optional=true end;return eux092_P end
+qHpY64=function(UBg54E)UBg54E=UBg54E or{ct='datatype',dt='any'}
+if J'['then
+UBg54E=z(UBg54E)local gQGq=qHpY64()UBg54E.val_dt=gQGq.dt
+UBg54E.val_optional=gQGq.optional elseif J'ID'then
+if g3Qeqnr(UIjls.lexme)=='table'then UBg54E=qccJ5b(UBg54E)else
+local OyHc5FEv=g3Qeqnr(A'ID'.lexme)UBg54E.dt=OyHc5FEv;if J'?'then A'?'UBg54E.optional=true end end else
+error('Expected a type_expression in \''..jdLnB0vD..'\'')end;return UBg54E end;local function ARuba()A':'nN=qHpY64(nN)nN.ct='var'end
+local function Wo53nZ(Dn1Xi)
+Dn1Xi=qHpY64(Dn1Xi)if J'.'then A'.'A'.'A'.'Dn1Xi.vargs=true end;return Dn1Xi end
+local function XRfQ()A'('nN.ct='fn'nN.dt='function'nN.params={}
+while not J')'do
+if J'ID'or J'['then
+local _gGmBBE=Wo53nZ()nN.params[#nN.params+1]=_gGmBBE
+if _gGmBBE.vargs then break end;if J','then A','elseif J'ID'then
+error('Was expecting \')\' not \''..UIjls.lexme..'\' in \''..jdLnB0vD)end elseif J','then A','nN.params[
+#nN.params+1]={ct='datatype',dt='any'}elseif J'.'then A'.'A'.'
+A'.'
+nN.params[#nN.params+1]={ct='datatype',dt='any',vargs=true}break else
+error('Found \''..
+UIjls.lexme..'\' instead of \')\' in \''..jdLnB0vD)end end;A')'end
+local function gFPRdEC()PSlD=A'ID'.lexme;if J':'then ARuba()elseif J'('then XRfQ()end end;local function lw9gLt3()A'const'gFPRdEC()nN.const=true end
+local function T()if J'const'then
+lw9gLt3()elseif J'ID'then gFPRdEC()end end
+qL=function(rIX4,AI14eFhp)
+if K(rIX4)then hrVI4meU=1;jdLnB0vD=rIX4;PSlD=rIX4
+nN={ct='',dt='',raw_key=jdLnB0vD,val=AI14eFhp}xEq6TAF=A5k5yt(rIX4)UIjls=xEq6TAF[hrVI4meU]T()if not nN.const then
+seMLr(nN,AI14eFhp)end;return PSlD,nN else local iW2O=t5jzEd9(AI14eFhp)
+return rIX4,{ct=
+iW2O=='function'and'fn'or'',dt=iW2O,raw_key=rIX4,val=AI14eFhp}end end end
+vfIyB=function(Gdp)local nbqmx={}for IWQcC,cvRh in next,Gdp do local W9yaJm,oJ1ec;W9yaJm,oJ1ec=qL(IWQcC,cvRh)
+nbqmx[W9yaJm]=oJ1ec end;return nbqmx end end;local quNsijN
+do local L;local MMNWLk;local x6Ni
+local function Q2waXkyp(mlTMZ)local q=mlTMZ:sub(1,1)if q==q:upper()then return MMNWLk else
+return L end end
+local function EG72(xb6,yK)
+if xb6:sub(1,2)=='__'then x6Ni[xb6]=yK elseif xb6:sub(1,1)=='_'then
+Q2waXkyp(xb6:sub(2)).private[xb6]=yK else Q2waXkyp(xb6).public[xb6]=yK end end
+quNsijN=function(rHLz2GD)L={public={},private={}}MMNWLk={public={},private={}}x6Ni={}for BlW0RhJA,Uy in next,rHLz2GD do
+EG72(BlW0RhJA,Uy)end;return L,MMNWLk,x6Ni end end;local function QUh2tc(n)return HGli(n.public,n.private)end
+local function qboV(TKu,M6kL)
+local M7o_=TKu.__static_members
+local function dk2X7J7(E2OQ)if t5jzEd9(M7o_.public[E2OQ])~='nil'then
+return M7o_.public[E2OQ]elseif t5jzEd9(M7o_.private[E2OQ])~='nil'then
+return M7o_.private[E2OQ]end end
+local function jv(SnbfLb6,ay)
+if ay=='super'then
+if M6kL then local W=M6kL.__get_static_member(ay)
+if W~=nil then return
+h_8(SnbfLb6,W,function(WzM,PSx)return
+WzM.val(SnbfLb6,unpack(PSx))end)end;return W else
+error('Class \''..class_type..'\' does not have a super class!')end else local I=dk2X7J7(ay)if I~=nil then
+return h_8(SnbfLb6,I,function(wnA,cW)
+return wnA.val(SnbfLb6,unpack(cW))end)end;return I end end
+local function MW(PHpCof2,bUPpn4T2,sode)local G9zkKODk=dk2X7J7(bUPpn4T2)
+if G9zkKODk~=nil then local MGt,ld9GuG4t
+MGt,ld9GuG4t=qL(bUPpn4T2,sode)M7o_[w8T3f(MGt)][MGt]=ld9GuG4t end end;return setmetatable({},{__index=jv,__newindex=MW})end
+local function nSBOx7(KpCCA,H6,hgsKvTz)local zEt=QUh2tc(NsoTwDs(KpCCA.__prototype))
+return
+setmetatable({__first_super=H6,__next_super=H6},{__index=function(Wjojpvg,l2PqbWw)
 if
-eux092_P'.'then ZA9'.'ZA9'.'ZA9'.'rHLz2GD=rHSjalVy.vargs(rHLz2GD)end;return rHLz2GD end
-local function AI14eFhp()ZA9'('a31jEAS=rHSjalVy.fn(a31jEAS)
-while not eux092_P')'do
-if eux092_P'ID'or
-eux092_P'['then local gQGq=rHSjalVy.datatype()gQGq.raw_key=s4
-local BlW0RhJA=rIX4(gQGq)
-a31jEAS.params[#a31jEAS.params+1]=BlW0RhJA
-if BlW0RhJA.vargs then if eux092_P')'then break else
-error('Cannot have additional parameters after a variable argument declaration in \''..s4 ..'\'')end end;if eux092_P','then ZA9','elseif eux092_P'ID'then
-error('Was expecting \')\' not \''..JmE.lexme..'\' in \''..s4)end elseif eux092_P','then ZA9','
-local Uy=rHSjalVy.datatype()Uy.raw_key=s4;Uy.dt='any'
-a31jEAS.params[#a31jEAS.params+1]=Uy elseif eux092_P'.'then local n=rHSjalVy.datatype()n.raw_key=s4;ZA9'.'ZA9'.'
-ZA9'.'n=rHSjalVy.vargs(n)
-a31jEAS.params[#a31jEAS.params+1]=n;break else
-error('Found \''..JmE.lexme..'\' instead of \')\' in \''..s4)end end;ZA9')'end;local function iW2O()FFG=ZA9'ID'.lexme
-if eux092_P':'then _gGmBBE()elseif eux092_P'('then AI14eFhp()end end;local function Gdp()ZA9'const'iW2O()
-a31jEAS=rHSjalVy.const(a31jEAS)end;local function nbqmx()
-if eux092_P'const'then Gdp()elseif eux092_P'ID'then iW2O()end end
-w8T3f=function(TKu,M6kL)
-if
-TKu:find(':')or TKu:find('%(')or TKu:sub(1,6)=='const 'then T=0;s4=TKu;FFG=TKu
-a31jEAS=rHSjalVy.new()a31jEAS.raw_key=s4;a31jEAS.key=TKu;I5=Oynw(TKu)JmE=LS4h()if JmE then
-nbqmx()end;JZAU2(a31jEAS,M6kL)a31jEAS.val=M6kL;return FFG,a31jEAS else
-return TKu,M6kL end end end
-K=function(M7o_)local dk2X7J7={}for jv,MW in next,M7o_ do new_key,new_val=w8T3f(jv,MW)
-dk2X7J7[new_key]=new_val end;return dk2X7J7 end end;local qL
-do local E2OQ;local SnbfLb6;local ay;local function W(PSx)local I=PSx:sub(1,1)
-if I==I:upper()then return SnbfLb6 else return E2OQ end end
-local function WzM(wnA,cW)
-if wnA:sub(1,2)=='__'then
-ay[wnA]=cW elseif wnA:sub(1,1)=='_'then
-W(wnA:sub(2)).private[wnA]=cW else W(wnA).public[wnA]=cW end end
-qL=function(PHpCof2)E2OQ={public={},private={}}SnbfLb6={public={},private={}}ay={}for bUPpn4T2,sode in next,PHpCof2 do
-WzM(bUPpn4T2,sode)end;return E2OQ,SnbfLb6,ay end end
-local function vfIyB(G9zkKODk)return R1FIoQI(G9zkKODk.public,G9zkKODk.private)end;local quNsijN={}
-function quNsijN.new(MGt,ld9GuG4t,KpCCA)local H6=rawget(MGt,'_hierarchy')
-local hgsKvTz=rawget(MGt,'_type')local zEt=rawget(MGt,'_meta')
-local Wjojpvg=rawget(MGt,'_instance_members')local l2PqbWw=rawget(MGt,'_super')local EJTH9=vfIyB(Wjojpvg)local qTB82;local KL={}
-local EATFLbgY=false
-if KpCCA then
-rawset(KpCCA,'_members',R1FIoQI(rawget(KpCCA,'_members'),EJTH9))rawset(KpCCA,'_next_super',l2PqbWw)
-if zhzpBSx(zEt.__init)==
-'Container'then
-seMLr(nil,zEt.__init,function(G3p2Yn,_jkkD9)
-G3p2Yn.val(KpCCA,unpack(_jkkD9))end)(unpack(ld9GuG4t))else zEt.__init(KpCCA,unpack(ld9GuG4t))end;EATFLbgY=true;return end
-local function FF(D)if zhzpBSx(EJTH9[D])~='nil'then return EJTH9[D]elseif
-zhzpBSx(KL[D])~='nil'then return KL[D]end end
-local function rh(DMn,GBzFRjVV)
-if GBzFRjVV~='super'then local pG4C8fDK=FF(GBzFRjVV)local LLFUU=zhzpBSx(pG4C8fDK)
-if LLFUU==
-'Container'then return
-seMLr(DMn,pG4C8fDK,function(kdmQtj6,Hc35_)return kdmQtj6.val(DMn,unpack(Hc35_))end)elseif LLFUU=='function'then
-return function(...)local ubP={...}if
-ubP[1]==DMn then ubP=m6SCS0(ubP,2,#ubP)end;return
-pG4C8fDK(DMn,unpack(ubP))end end;return pG4C8fDK else
+hgsKvTz[l2PqbWw]then return hgsKvTz[l2PqbWw](Wjojpvg,l2PqbWw,zEt)end;local EJTH9=zEt[l2PqbWw]
+if EJTH9 ==nil then if KpCCA.__prototype[l2PqbWw]then
+EJTH9=KpCCA.__prototype[l2PqbWw]else
+EJTH9=Wjojpvg.__first_super.__get_instance_member(l2PqbWw)end end
+if EJTH9 ~=nil then return
+h_8(Wjojpvg,EJTH9,function(EJTH9,qTB82)return EJTH9.val(Wjojpvg,unpack(qTB82))end)end end,__newindex=function(KL,EATFLbgY,FF)
+local rh=zEt[EATFLbgY]if rh==nil then new_key,new_val=qL(EATFLbgY,FF)zEt[new_key]=new_val else
+zEt[EATFLbgY]=xL7OTb(rh,FF)end end}),zEt end
+function create_instance(YcCR,G3p2Yn,_jkkD9)local D=YcCR.__super;local DMn=YcCR.__meta;local GBzFRjVV=YcCR.__members;local pG4C8fDK
+local LLFUU;local kdmQtj6=false
+pG4C8fDK,LLFUU=nSBOx7(YcCR,D,{['super']=function(Hc35_,ubP,LLFUU)
+if not kdmQtj6 then
 return
 function(...)
-if rawget(DMn,'_next_super')then
-if not EATFLbgY then local eN0UMW={...}if
-eN0UMW[1]==qTB82 then eN0UMW=m6SCS0(eN0UMW,2,#eN0UMW)end
-quNsijN.new(rawget(DMn,'_next_super'),eN0UMW,DMn)EATFLbgY=true else print'index super'end else
-error('Class \''..hgsKvTz..'\' does not have a super class!')end end end end
-local function YcCR(lAG,AvEtR8Y,rl3MMqfm)local nQj=FF(AvEtR8Y)
-if zhzpBSx(nQj)~='Container'then
-new_key,new_val=w8T3f(AvEtR8Y,rl3MMqfm)KL[new_key]=new_val else KL[AvEtR8Y]=qX(nQj,rl3MMqfm)end end
-qTB82=setmetatable({_next_super=l2PqbWw,_members=EJTH9},{__index=rh,__newindex=YcCR})
-if zhzpBSx(zEt.__init)=='Container'then
-seMLr(nil,zEt.__init,function(Eq8jDq,LnQUN)
-Eq8jDq.val(qTB82,unpack(LnQUN))end)(unpack(ld9GuG4t))else zEt.__init(qTB82,unpack(ld9GuG4t))end
-do local Gm1={}for Jp,NwBqNl3C in next,zEt do Gm1[Jp]=h_8(NwBqNl3C)end;zEt=Gm1 end
+if Hc35_.__next_super then local eN0UMW={...}if
+eN0UMW[1]==Hc35_ then eN0UMW=Hv(eN0UMW,2,#eN0UMW)end
+Hc35_.__next_super.__prototype_self(Hc35_,eN0UMW)kdmQtj6=true else
+error('Class \''..YcCR.__name..'\' does not have a super class!')end end else local lAG=D.__get_instance_member(ubP)
+if t5jzEd9(lAG)~='nil'then return
+h_8(Hc35_,lAG,function(lAG,AvEtR8Y)return
+lAG.val(Hc35_,unpack(AvEtR8Y))end)end;return lAG end end})
+assert(DMn.__init~=nil,'\'__init\' does not exist in class \''..YcCR.__name..'\'')
+h_8(YcCR,DMn.__init,function(rl3MMqfm,nQj)rl3MMqfm.val(pG4C8fDK,unpack(nQj))end)(unpack(G3p2Yn))do local Eq8jDq={}for LnQUN,Gm1 in next,DMn do Eq8jDq[LnQUN]=Gm1.val end
+DMn=Eq8jDq end
 return
-setmetatable({_hierarchy=rawget(MGt,'_hierarchy')},R1FIoQI({__type=hgsKvTz,__index=function(XuqjvYPF,Trh)local KuK;if
-Trh:sub(1,1)~='_'then KuK=FF(Trh)end;local s0FU=zhzpBSx(KuK)
-if s0FU=='Container'then
-local wQl=seMLr(XuqjvYPF,KuK,function(g,m4u)return
-g.val(qTB82,unpack(m4u))end)return wQl elseif s0FU=='function'then return
-function(...)local StZ={...}if StZ[1]==XuqjvYPF then
-StZ=m6SCS0(StZ,2,#StZ)end;return KuK(qTB82,unpack(StZ))end end;return KuK end,__newindex=function(C1NqzxY,T1gVrYq,P5G)
+setmetatable({__baseclass=YcCR.__baseclass,__hierarchy=YcCR.__hierarchy,__name=YcCR.__name},HGli({__index=function(Jp,NwBqNl3C)
 if
-T1gVrYq:sub(1,1)~='_'then local JC=FF(T1gVrYq)if zhzpBSx(JC)=='Container'then
-KL[T1gVrYq]=qX(JC,P5G)else KL[T1gVrYq]=P5G end else
-error('Cannot set a private value!')end end,__tostring=function(PDA)
+NwBqNl3C:sub(1,1)~='_'then obj=LLFUU[NwBqNl3C]if t5jzEd9(obj)=='nil'and D then
+obj=D.__get_instance_member(NwBqNl3C)end
+if t5jzEd9(obj)~='nil'then return
+h_8(Jp,obj,function(XuqjvYPF,Trh)return
+XuqjvYPF.val(pG4C8fDK,unpack(Trh))end)end end end,__newindex=function(KuK,s0FU,wQl)
 if
-zhzpBSx(zEt.__tostring)=='function'then return zEt.__tostring(qTB82)end;return hgsKvTz end},zEt))end;local QUh2tc={}
-function QUh2tc.new(Kqne5Stra,FKLmmhnQ)local F82=''if FKLmmhnQ then
-F82=rawget(FKLmmhnQ,'_hierarchy')..'.'end;Kqne5Stra=K(Kqne5Stra)local wJ6tY_;local TNg;local wO9T
-wJ6tY_,TNg,wO9T=qL(Kqne5Stra)
-if not wO9T.__type then error('__type is not defined in class.')end
-assert(zhzpBSx(wO9T.__type)=='string','__type is not a string.')local QMcSUqdi=wO9T.__type;F82=F82 ..QMcSUqdi;wO9T.__index=nil
-wO9T.__newindex=nil;wO9T.__metatable=nil;local sKy2P9i
-do
-local function AkxLdb66(ZNXs3Bwd)
+s0FU:sub(1,1)~='_'then local g=LLFUU[s0FU]
+if g==nil then new_key,new_val=qL(s0FU,wQl)
+LLFUU[new_key]=new_val else LLFUU[s0FU]=xL7OTb(g,wQl)end else error('Cannot set a private value!')end end,__tostring=function(m4u)
 if
-zhzpBSx(TNg.public[ZNXs3Bwd])~='nil'then return TNg.public[ZNXs3Bwd]elseif zhzpBSx(TNg.private[ZNXs3Bwd])~=
-'nil'then return TNg.private[ZNXs3Bwd]end end
-local function aUR(Ginn,h_pK)
-if h_pK=='super'then
-if FKLmmhnQ then
-if zhzpBSx(FKLmmhnQ[h_pK])=='function'then
-return function(...)
-local L={...}if L[1]==Ginn then L=m6SCS0(L,2,#L)end;return
-FKLmmhnQ[h_pK](Ginn,unpack(L))end end;return FKLmmhnQ[h_pK]else
-error('Class \''..QMcSUqdi..'\' does not have a super class!')end else local vBKFXR3=AkxLdb66(h_pK)local FP3j=zhzpBSx(vBKFXR3)
-if FP3j=='Container'then return
-seMLr(Ginn,vBKFXR3,function(fe,ggnA)return
-fe.val(Ginn,unpack(ggnA))end)elseif FP3j=='function'then return
-function(...)local KaD2ExEO={...}
+t5jzEd9(DMn.__tostring)=='function'then return DMn.__tostring(pG4C8fDK)end;return"instance '"..m4u.__name.."'"end},DMn))end
+local function u(StZ,C1NqzxY,T1gVrYq)StZ=StZ or''C1NqzxY=vfIyB(C1NqzxY)
+local P5G=StZ~=''and StZ or'<anonymous>'if T1gVrYq then
+P5G=rawget(T1gVrYq,'__hierarchy')..'.'..P5G end;C1NqzxY.__index=nil
+C1NqzxY.__newindex=nil
+return{__baseclass=rHSjalVy,__hierarchy=P5G,__name=StZ,__super=T1gVrYq,__members=C1NqzxY}end
+local function Ki1(JC,PDA,Kqne5Stra)local FKLmmhnQ=u(JC,PDA,Kqne5Stra)local F82;local wJ6tY_;local TNg
+F82,wJ6tY_,TNg=quNsijN(FKLmmhnQ.__members)FKLmmhnQ.__baseclass=rHSjalVy;FKLmmhnQ.__meta=TNg
+FKLmmhnQ.__static_members=wJ6tY_;FKLmmhnQ.__prototype=F82
+FKLmmhnQ.__get_static_member=function(QMcSUqdi)
 if
-KaD2ExEO[1]==Ginn then KaD2ExEO=m6SCS0(KaD2ExEO,2,#KaD2ExEO)end;return vBKFXR3(Ginn,unpack(KaD2ExEO))end end;return vBKFXR3 end end
-local function c4(TpiFT,J,CH)local sJ05I=AkxLdb66(J)if zhzpBSx(sJ05I)~='Container'then local HrLCim,w
-HrLCim,w=w8T3f(J,CH)TNg[xL7OTb(HrLCim)][HrLCim]=w else
-TNg[xL7OTb(J)][J]=qX(sJ05I,CH)end end
-sKy2P9i=function()return setmetatable({},{__index=aUR,__newindex=c4})end end;local S=sKy2P9i()
-local AD=setmetatable({_super=FKLmmhnQ,_hierarchy=F82,_type=QMcSUqdi,_instance_members=wJ6tY_,_static_members=TNg,_meta=wO9T},{__type=type,__index=function(sUu7z,M5oB)
-local xIyIKo=sUu7z._static_members.public[M5oB]local f2x=zhzpBSx(xIyIKo)
-if f2x=='Container'then
-local Nwl=seMLr(sUu7z,xIyIKo,function(Xpt_SQ,Y)return
-Xpt_SQ.val(S,unpack(Y))end)
-if zhzpBSx(Nwl)=='nil'and FKLmmhnQ then return FKLmmhnQ[M5oB]end;return Nwl elseif f2x=='function'then return
-function(...)local SMa={...}if SMa[1]==sUu7z then
-SMa=m6SCS0(SMa,2,#SMa)end;return xIyIKo(S,unpack(SMa))end end;return xIyIKo end,__newindex=function(Bo,zF6ZPjQ,nNQG3)
-local yW=zhzpBSx(Bo._static_members.public[zF6ZPjQ])
-if yW=='Container'then
-Bo._static_members.public[zF6ZPjQ]=qX(Bo._static_members.public[zF6ZPjQ],nNQG3)else Bo._static_members.public[zF6ZPjQ]=nNQG3 end end,__call=function(efGM8UMy,...)if
-not wO9T.__init then
-error('__init is not defined in class \''..QMcSUqdi..'\'')end
-return quNsijN.new(efGM8UMy,{...})end})return AD end;local qboV={}qboV.typeof=zhzpBSx;function qboV.class(KhH)return
-function(H4tXd)return QUh2tc.new(H4tXd,KhH)end end
-function qboV.instanceof(Nq6If,II)
-local Y_tefq=rawget(Nq6If,'_hierarchy')local i={}local a3u=""
-for mzhB in string.gmatch(Y_tefq,'.')do if(mzhB~='.')then a3u=a3u..mzhB else if a3u==II then return
-true end end end;if a3u==II then return true end;return false end;return qboV
+(
+t5jzEd9(wJ6tY_.public[QMcSUqdi])=='nil'and
+t5jzEd9(wJ6tY_.private[QMcSUqdi])=='nil')and Kqne5Stra then return
+Kqne5Stra.__get_static_member(QMcSUqdi)end;return
+wJ6tY_.public[QMcSUqdi]or wJ6tY_.private[QMcSUqdi]end
+FKLmmhnQ.__get_instance_member=function(sKy2P9i)
+if
+(
+t5jzEd9(F82.public[sKy2P9i])=='nil'and t5jzEd9(F82.private[sKy2P9i])=='nil')and Kqne5Stra then return
+Kqne5Stra.__get_instance_member(sKy2P9i)end
+return F82.public[sKy2P9i]or F82.private[sKy2P9i]end
+FKLmmhnQ.__prototype_self=function(S,AD)S.__next_super=Kqne5Stra
+assert(TNg.__init~=nil,
+'\'__init\' does not exist in class \''..FKLmmhnQ.__name..'\'')
+h_8(nil,TNg.__init,function(AkxLdb66,aUR)AkxLdb66.val(S,unpack(aUR))end)(unpack(AD))end;local wO9T=qboV(FKLmmhnQ,Kqne5Stra)
+return
+setmetatable(FKLmmhnQ,{__index=function(FKLmmhnQ,c4)
+local ZNXs3Bwd=wJ6tY_.public[c4]
+if ZNXs3Bwd~=nil then return
+h_8(FKLmmhnQ,ZNXs3Bwd,function(Ginn,h_pK)return Ginn.val(wO9T,unpack(h_pK))end)elseif Kqne5Stra then return Kqne5Stra[c4]end;return ZNXs3Bwd end,__newindex=function(FKLmmhnQ,L,vBKFXR3)
+wJ6tY_.public[L]=xL7OTb(wJ6tY_.public[L],vBKFXR3)end,__call=function(...)local FP3j={...}
+FP3j=Hv(FP3j,2,#FP3j)return create_instance(FKLmmhnQ,{...})end,__tostring=function(fe)return
+"complex class '"..JC.."'"end})end
+local function zz1QI(ggnA,KaD2ExEO)local TpiFT=u(ggnA,KaD2ExEO)if not TpiFT.__meta.__init then
+error(
+'__init is not defined in class \''..TpiFT.__name..'\'')end;return
+setmetatable(TpiFT,{__call=function(...)local J={...}
+J=Hv(J,2,#J)return create_instance(TpiFT,{...})end})end;local function kFTAh()end;local LBf={}LBf.typeof=t5jzEd9;LBf.is_a_class=TjhsnP
+function LBf.class(CH)
+assert(
+t5jzEd9(CH)=='string','Class name must be a string!')return
+function(sJ05I)return
+function(HrLCim)
+assert(t5jzEd9(HrLCim)=='table','Class must have a members table!')return Ki1(CH,HrLCim,sJ05I)end end end
+function LBf.instanceof(w,sUu7z)local M5oB=rawget(w,'__hierarchy')local xIyIKo={}local f2x=""for Nwl in
+string.gmatch(M5oB,'.')do
+if(Nwl~='.')then f2x=f2x..Nwl else if f2x==sUu7z then return true end end end
+if f2x==sUu7z then return true end;return false end;function LBf.mixin(Xpt_SQ,Y)end;return LBf

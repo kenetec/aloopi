@@ -2,9 +2,7 @@ local aloopi = require 'aloopi'
 
 return function(time)
     time('Creating a class with no typing', function()
-        aloopi.class() {
-            __type = '';
-
+        aloopi.class '' () {
             -- public static variable
             A = 1;
             -- private static variable

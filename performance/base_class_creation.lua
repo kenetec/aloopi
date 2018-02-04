@@ -5,17 +5,14 @@ local aloopi = require 'aloopi'
 return function(time)
 	time('Creating a minimal class', function()
 		-- Create with the bare minimum.
-		aloopi.class() {
-			__type = '';
+		aloopi.class '' () {
 			init = function() end;
 		}
 	end)
 
 	-- static class
 	time('Creating a SC', function()
-		aloopi.class() {
-			__type = '';
-
+		aloopi.class '' () {
 			-- public static variable
 			A = 1;
 			-- private static variable
@@ -29,8 +26,7 @@ return function(time)
 
 	-- instance class
 	time('Creating an IC', function()
-		aloopi.class(){
-			__type = '';
+		aloopi.class '' (){
 			__init = function(self)
 				-- public instance variable
 				self.a = 1;

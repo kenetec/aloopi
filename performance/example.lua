@@ -2,9 +2,7 @@ local aloopi = require 'aloopi'
 local class = aloopi.class;
 local typeof = aloopi.typeof;
 
-local Food = class () {
-    __type = 'Food';
-
+local Food = class 'Food' () {
 	-- static constant
 	['const EDIBLE'] = true;
 
@@ -17,7 +15,7 @@ local Food = class () {
 		print('I am known as ' .. self.name .. ' and I have a healthiness level of ' .. tostring(self._healthinessLevel))
     end;
     
-    ['const PrintFood([]str)'] = function(foods)
+    ['const PrintFood([]str)'] = function(self, foods)
         print 'Here are the foods:'
         for i, v in next, foods do print('', v) end
         print '\nyum!'
@@ -26,19 +24,17 @@ local Food = class () {
     ['Num: num'] = 5;
 }
 
---local p1 = Person(1, 'Kendall Hester') -- -> Error
--- Food:PrintFood({'apple', 'burger', 'juice'})
--- Food.Num = 6
+Food:PrintFood({'apple', 'burger', 'juice'})
+Food.Num = 6
 
--- local food = Food('Peanut', 6)
--- food.what_are_you() --> 'I am known as Peanut and I have a healthiness level of 6'
--- food.name = 'Eapple'
--- food:what_are_you()
+local food = Food('Peanut', 6)
+food.what_are_you() --> 'I am known as Peanut and I have a healthiness level of 6'
+food.name = 'Eapple'
+food:what_are_you()
 
--- print(typeof(food))
+print(typeof(food))
 
-local RGB = class () {
-	__type = 'RGB',
+local RGB = class 'RGB' () {
 	['__init(num, num, num)'] = function(self, r, g, b)
 		self['const r: num'] = r;
 		self['const g: num'] = g;
@@ -51,23 +47,21 @@ local RGB = class () {
 	end;
 }
 
-local Fruit;
-Fruit = class (Food) {
-	__type = 'Fruit',
-
+local Fruit
+Fruit = class 'Fruit' (Food) {
 	['__init(str,, RGB)'] = function(self, name, healthinessLevel, fruitColor)
 		self.super(name, healthinessLevel)
         self['_fruitColor: RGB'] = fruitColor
 	end;
 
 	what_are_you = function(self)
-		print(Fruit._YUMMY, Fruit.Yes) --> true	false
+		print(Fruit._YUMMY, Fruit.Yes) --> nil	false
 		print('I am a ' .. self.name .. '. I have a healthiness level of ' .. tostring(self._healthinessLevel) .. ' and my color is ' .. tostring(self._fruitColor))
 	end;
 	
 	['PrintDict(tab<RGB,num>)'] = function(self, dict)
-		Fruit._YUMMY = false;
-		Fruit.Yes = true;
+		self._YUMMY = false;
+		self.Yes = true;
 		for k, v in next, dict do print(k, v) end
 	end;
 
@@ -79,21 +73,20 @@ Fruit = class (Food) {
 	end;
 }
 
--- local apple = Fruit('Apple', 10, RGB(220, 0, 100))
--- apple.what_are_you()
+local apple = Fruit('Apple', 10, RGB(220, 0, 100))
+apple.what_are_you()
 Fruit.Print(1, 2)
+print''
 
--- Fruit.PrintDict {
--- 	[RGB(1, 1, 1)] = 1;
--- 	[RGB(5, 10, 10)] = 2;
--- 	[RGB(100, 100, 100)] = 3;
--- }
--- Fruit.PrintDict {}--{1, 2, 3, 4, 5, 0}
+Fruit.PrintDict {
+	[RGB(1, 1, 1)] = 1;
+	[RGB(5, 10, 10)] = 2;
+	[RGB(100, 100, 100)] = 3;
+}
+print''
+apple.what_are_you()
 
---print(apple._healthinessLevel) --> 'nil'
-
-local Orange = class (Fruit) {
-	__type = 'Orange';
+local Orange = class 'Orange' (Fruit) {
 	['__init(str, num, RGB, num)'] = function(self, name, healthinessLevel, fruitColor, sweetness)
 		self.super(name, healthinessLevel, fruitColor)
 		self['sweetness: num'] = sweetness;
