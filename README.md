@@ -1,7 +1,7 @@
 # aloopi
 **Another Lua OOP Implementation.**
 
-aloopi provides a neat solution to OOP in Lua that includes:
+aloopi provides a neat and clean solution to OOP in Lua that includes:
 
 + **Classes**
     + Inheritance
